@@ -1,0 +1,497 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enumeraciones ─────────────────────────────────────────────
+
+enum Rol {
+  ADMIN
+  RECEPCIONISTA
+  HOUSEKEEPING
+}
+
+enum TipoDocumento {
+  CC
+  CE
+  PASAPORTE
+}
+
+enum EstadoHabitacion {
+  DISPONIBLE
+  OCUPADA
+  EN_LIMPIEZA
+  EN_MANTENIMIENTO
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  EN_CURSO
+  FINALIZADA
+  CANCELADA
+  NO_SHOW
+}
+
+enum EstadoCompra {
+  BORRADOR
+  CONFIRMADA
+}
+
+enum MotivoMovimientoInventario {
+  COMPRA
+  VENTA
+  CONSUMO_HABITACION
+  AJUSTE
+}
+
+enum TipoVenta {
+  ANTICIPO
+  SALDO_CHECKIN
+  CONSUMOS_CHECKOUT
+  VENTA_DIRECTA
+}
+
+enum EstadoVenta {
+  PAGADA
+  ANULADA
+}
+
+enum TipoDetalleVenta {
+  HABITACION
+  PRODUCTO
+}
+
+enum MetodoPago {
+  EFECTIVO
+  NEQUI
+  DAVIPLATA
+  BANCOLOMBIA
+  TRANSFERENCIA
+}
+
+enum EstadoCaja {
+  ABIERTA
+  CERRADA
+}
+
+enum TipoMovimientoCaja {
+  INGRESO
+  EGRESO
+}
+
+// ─── Acceso ────────────────────────────────────────────────────
+
+model Usuario {
+  id            Int      @id @default(autoincrement())
+  nombre        String   @db.VarChar(80)
+  apellido      String   @db.VarChar(80)
+  email         String   @unique @db.VarChar(120)
+  passwordHash  String   @map("password_hash")
+  rol           Rol
+  activo        Boolean  @default(true)
+  creadoEn      DateTime @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  refreshTokens         RefreshToken[]
+  reservasCreadas       Reserva[]
+  consumosRegistrados   ConsumoHabitacion[]
+  ventas                Venta[]
+  compras               Compra[]
+  movimientosInventario MovimientoInventario[]
+  cajasAbiertas         Caja[]                 @relation("CajaAbiertaPor")
+  cajasCerradas         Caja[]                 @relation("CajaCerradaPor")
+  movimientosCaja       CajaMovimiento[]
+
+  @@map("usuarios")
+}
+
+model RefreshToken {
+  id         Int       @id @default(autoincrement())
+  usuarioId  Int       @map("usuario_id")
+  tokenHash  String    @unique @map("token_hash")
+  expiraEn   DateTime  @map("expira_en")
+  revocadoEn DateTime? @map("revocado_en")
+  creadoEn   DateTime  @default(now()) @map("creado_en")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("refresh_tokens")
+}
+
+// ─── Clientes ──────────────────────────────────────────────────
+
+model Cliente {
+  id              Int           @id @default(autoincrement())
+  nombres         String        @db.VarChar(80)
+  apellidos       String        @db.VarChar(80)
+  tipoDocumento   TipoDocumento @map("tipo_documento")
+  numeroDocumento String        @map("numero_documento") @db.VarChar(20)
+  fechaNacimiento DateTime?     @map("fecha_nacimiento") @db.Date
+  telefono        String?       @db.VarChar(20)
+  email           String?       @db.VarChar(120)
+  observaciones   String?
+  creadoEn        DateTime      @default(now()) @map("creado_en")
+  actualizadoEn   DateTime      @updatedAt @map("actualizado_en")
+
+  reservasComoTitular Reserva[]
+  hospedajes          ReservaHuesped[]
+  ventas              Venta[]
+
+  @@unique([tipoDocumento, numeroDocumento])
+  @@map("clientes")
+}
+
+// ─── Habitaciones ──────────────────────────────────────────────
+
+model TipoHabitacion {
+  id              Int     @id @default(autoincrement())
+  nombre          String  @unique @db.VarChar(40)
+  capacidadMaxima Int     @map("capacidad_maxima")
+  tarifaBase      Int     @map("tarifa_base")
+  descripcion     String?
+
+  habitaciones     Habitacion[]
+  tarifasTemporada TarifaTemporada[]
+
+  @@map("tipos_habitacion")
+}
+
+model Habitacion {
+  id          Int              @id @default(autoincrement())
+  numero      String           @unique @db.VarChar(10)
+  piso        Int
+  tipoId      Int              @map("tipo_id")
+  estado      EstadoHabitacion @default(DISPONIBLE)
+  descripcion String?
+  activa      Boolean          @default(true)
+
+  tipo      TipoHabitacion      @relation(fields: [tipoId], references: [id])
+  reservas  ReservaHabitacion[]
+  huespedes ReservaHuesped[]
+
+  @@index([tipoId])
+  @@map("habitaciones")
+}
+
+model Temporada {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(60)
+  fechaInicio DateTime @map("fecha_inicio") @db.Date
+  fechaFin    DateTime @map("fecha_fin") @db.Date
+  activa      Boolean  @default(true)
+
+  tarifas TarifaTemporada[]
+
+  @@map("temporadas")
+}
+
+model TarifaTemporada {
+  id               Int @id @default(autoincrement())
+  temporadaId      Int @map("temporada_id")
+  tipoHabitacionId Int @map("tipo_habitacion_id")
+  tarifa           Int
+
+  temporada      Temporada      @relation(fields: [temporadaId], references: [id], onDelete: Cascade)
+  tipoHabitacion TipoHabitacion @relation(fields: [tipoHabitacionId], references: [id])
+
+  @@unique([temporadaId, tipoHabitacionId])
+  @@map("tarifas_temporada")
+}
+
+// ─── Reservas ──────────────────────────────────────────────────
+
+model Reserva {
+  id                  Int           @id @default(autoincrement())
+  codigo              String        @unique @db.VarChar(12)
+  titularId           Int           @map("titular_id")
+  fechaLlegada        DateTime      @map("fecha_llegada") @db.Date
+  fechaSalida         DateTime      @map("fecha_salida") @db.Date
+  estado              EstadoReserva @default(PENDIENTE)
+  descuentoPorcentaje Int           @default(0) @map("descuento_porcentaje")
+  observaciones       String?
+  checkinEn           DateTime?     @map("checkin_en")
+  checkoutEn          DateTime?     @map("checkout_en")
+  creadoPorId         Int           @map("creado_por_id")
+  creadoEn            DateTime      @default(now()) @map("creado_en")
+  actualizadoEn       DateTime      @updatedAt @map("actualizado_en")
+
+  titular      Cliente             @relation(fields: [titularId], references: [id])
+  creadoPor    Usuario             @relation(fields: [creadoPorId], references: [id])
+  habitaciones ReservaHabitacion[]
+  huespedes    ReservaHuesped[]
+  consumos     ConsumoHabitacion[]
+  ventas       Venta[]
+
+  @@index([titularId])
+  @@index([estado])
+  @@index([fechaLlegada, fechaSalida])
+  @@map("reservas")
+}
+
+model ReservaHabitacion {
+  id           Int @id @default(autoincrement())
+  reservaId    Int @map("reserva_id")
+  habitacionId Int @map("habitacion_id")
+  tarifaNoche  Int @map("tarifa_noche")
+  noches       Int
+
+  reserva    Reserva    @relation(fields: [reservaId], references: [id], onDelete: Cascade)
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id])
+
+  @@unique([reservaId, habitacionId])
+  @@index([habitacionId])
+  @@map("reserva_habitaciones")
+}
+
+model ReservaHuesped {
+  id           Int @id @default(autoincrement())
+  reservaId    Int @map("reserva_id")
+  clienteId    Int @map("cliente_id")
+  habitacionId Int @map("habitacion_id")
+
+  reserva    Reserva    @relation(fields: [reservaId], references: [id], onDelete: Cascade)
+  cliente    Cliente    @relation(fields: [clienteId], references: [id])
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id])
+
+  @@unique([reservaId, clienteId])
+  @@map("reserva_huespedes")
+}
+
+// ─── Tienda e inventario ───────────────────────────────────────
+
+model Categoria {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(40)
+
+  productos Producto[]
+
+  @@map("categorias")
+}
+
+model Producto {
+  id            Int      @id @default(autoincrement())
+  codigo        String   @unique @db.VarChar(10)
+  nombre        String   @db.VarChar(100)
+  categoriaId   Int      @map("categoria_id")
+  precioVenta   Int      @map("precio_venta")
+  costo         Int
+  stockActual   Int      @default(0) @map("stock_actual")
+  stockMinimo   Int      @default(0) @map("stock_minimo")
+  activo        Boolean  @default(true)
+  creadoEn      DateTime @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  categoria   Categoria              @relation(fields: [categoriaId], references: [id])
+  compras     CompraDetalle[]
+  movimientos MovimientoInventario[]
+  consumos    ConsumoHabitacion[]
+  ventas      VentaDetalle[]
+
+  @@index([categoriaId])
+  @@map("productos")
+}
+
+model Proveedor {
+  id       Int     @id @default(autoincrement())
+  nombre   String  @db.VarChar(100)
+  nit      String? @db.VarChar(20)
+  contacto String? @db.VarChar(80)
+  telefono String? @db.VarChar(20)
+  email    String? @db.VarChar(120)
+  activo   Boolean @default(true)
+
+  compras Compra[]
+
+  @@map("proveedores")
+}
+
+model Compra {
+  id           Int          @id @default(autoincrement())
+  proveedorId  Int          @map("proveedor_id")
+  estado       EstadoCompra @default(BORRADOR)
+  total        Int          @default(0)
+  creadoPorId  Int          @map("creado_por_id")
+  creadoEn     DateTime     @default(now()) @map("creado_en")
+  confirmadaEn DateTime?    @map("confirmada_en")
+
+  proveedor   Proveedor              @relation(fields: [proveedorId], references: [id])
+  creadoPor   Usuario                @relation(fields: [creadoPorId], references: [id])
+  detalles    CompraDetalle[]
+  movimientos MovimientoInventario[]
+
+  @@map("compras")
+}
+
+model CompraDetalle {
+  id            Int @id @default(autoincrement())
+  compraId      Int @map("compra_id")
+  productoId    Int @map("producto_id")
+  cantidad      Int
+  costoUnitario Int @map("costo_unitario")
+
+  compra   Compra   @relation(fields: [compraId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+
+  @@index([compraId])
+  @@map("compra_detalles")
+}
+
+model MovimientoInventario {
+  id              Int                        @id @default(autoincrement())
+  productoId      Int                        @map("producto_id")
+  motivo          MotivoMovimientoInventario
+  cantidad        Int
+  stockResultante Int                        @map("stock_resultante")
+  observacion     String?
+  compraId        Int?                       @map("compra_id")
+  ventaId         Int?                       @map("venta_id")
+  consumoId       Int?                       @map("consumo_id")
+  usuarioId       Int                        @map("usuario_id")
+  creadoEn        DateTime                   @default(now()) @map("creado_en")
+
+  producto Producto           @relation(fields: [productoId], references: [id])
+  compra   Compra?            @relation(fields: [compraId], references: [id])
+  venta    Venta?             @relation(fields: [ventaId], references: [id])
+  consumo  ConsumoHabitacion? @relation(fields: [consumoId], references: [id])
+  usuario  Usuario            @relation(fields: [usuarioId], references: [id])
+
+  @@index([productoId, creadoEn])
+  @@map("movimientos_inventario")
+}
+
+// ─── Cobros ────────────────────────────────────────────────────
+
+model ConsumoHabitacion {
+  id              Int      @id @default(autoincrement())
+  reservaId       Int      @map("reserva_id")
+  productoId      Int      @map("producto_id")
+  cantidad        Int
+  precioUnitario  Int      @map("precio_unitario")
+  pagado          Boolean  @default(false)
+  ventaId         Int?     @map("venta_id")
+  registradoPorId Int      @map("registrado_por_id")
+  creadoEn        DateTime @default(now()) @map("creado_en")
+
+  reserva       Reserva                @relation(fields: [reservaId], references: [id])
+  producto      Producto               @relation(fields: [productoId], references: [id])
+  venta         Venta?                 @relation(fields: [ventaId], references: [id])
+  registradoPor Usuario                @relation(fields: [registradoPorId], references: [id])
+  movimientos   MovimientoInventario[]
+
+  @@index([reservaId, pagado])
+  @@map("consumos_habitacion")
+}
+
+model Venta {
+  id          Int         @id @default(autoincrement())
+  tipo        TipoVenta
+  estado      EstadoVenta @default(PAGADA)
+  reservaId   Int?        @map("reserva_id")
+  clienteId   Int?        @map("cliente_id")
+  cajaId      Int         @map("caja_id")
+  subtotal    Int
+  iva         Int
+  descuento   Int         @default(0)
+  total       Int
+  creadoPorId Int         @map("creado_por_id")
+  creadoEn    DateTime    @default(now()) @map("creado_en")
+
+  reserva               Reserva?               @relation(fields: [reservaId], references: [id])
+  cliente               Cliente?               @relation(fields: [clienteId], references: [id])
+  caja                  Caja                   @relation(fields: [cajaId], references: [id])
+  creadoPor             Usuario                @relation(fields: [creadoPorId], references: [id])
+  detalles              VentaDetalle[]
+  pagos                 VentaPago[]
+  consumosPagados       ConsumoHabitacion[]
+  movimientosInventario MovimientoInventario[]
+  movimientosCaja       CajaMovimiento[]
+
+  @@index([reservaId])
+  @@index([cajaId])
+  @@index([creadoEn])
+  @@map("ventas")
+}
+
+model VentaDetalle {
+  id             Int              @id @default(autoincrement())
+  ventaId        Int              @map("venta_id")
+  tipo           TipoDetalleVenta
+  productoId     Int?             @map("producto_id")
+  descripcion    String           @db.VarChar(150)
+  cantidad       Int
+  precioUnitario Int              @map("precio_unitario")
+  total          Int
+
+  venta    Venta     @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  producto Producto? @relation(fields: [productoId], references: [id])
+
+  @@index([ventaId])
+  @@map("venta_detalles")
+}
+
+model VentaPago {
+  id      Int        @id @default(autoincrement())
+  ventaId Int        @map("venta_id")
+  metodo  MetodoPago
+  monto   Int
+
+  venta Venta @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+
+  @@index([ventaId])
+  @@map("venta_pagos")
+}
+
+// ─── Caja y configuración ──────────────────────────────────────
+
+model Caja {
+  id           Int        @id @default(autoincrement())
+  montoBase    Int        @default(100000) @map("monto_base")
+  estado       EstadoCaja @default(ABIERTA)
+  abiertaPorId Int        @map("abierta_por_id")
+  cerradaPorId Int?       @map("cerrada_por_id")
+  abiertaEn    DateTime   @default(now()) @map("abierta_en")
+  cerradaEn    DateTime?  @map("cerrada_en")
+
+  abiertaPor  Usuario          @relation("CajaAbiertaPor", fields: [abiertaPorId], references: [id])
+  cerradaPor  Usuario?         @relation("CajaCerradaPor", fields: [cerradaPorId], references: [id])
+  ventas      Venta[]
+  movimientos CajaMovimiento[]
+
+  @@index([estado])
+  @@map("cajas")
+}
+
+model CajaMovimiento {
+  id          Int                @id @default(autoincrement())
+  cajaId      Int                @map("caja_id")
+  tipo        TipoMovimientoCaja
+  metodo      MetodoPago
+  monto       Int
+  descripcion String             @db.VarChar(150)
+  ventaId     Int?               @map("venta_id")
+  usuarioId   Int                @map("usuario_id")
+  creadoEn    DateTime           @default(now()) @map("creado_en")
+
+  caja    Caja    @relation(fields: [cajaId], references: [id])
+  venta   Venta?  @relation(fields: [ventaId], references: [id])
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@index([cajaId])
+  @@map("caja_movimientos")
+}
+
+model Configuracion {
+  clave         String   @id @db.VarChar(60)
+  valor         String
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  @@map("configuracion")
+}
