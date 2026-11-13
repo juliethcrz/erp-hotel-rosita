@@ -300,7 +300,7 @@ export function checkin(id, pagos, usuarioId) {
   });
 }
 
-export function registrarConsumo(id, { productoId, cantidad }, usuarioId) {
+export function registrarConsumos(id, items, usuarioId) {
   return prisma.$transaction(async (tx) => {
     const reserva = await buscarReserva(tx, id);
     exigirEstado(
@@ -309,29 +309,31 @@ export function registrarConsumo(id, { productoId, cantidad }, usuarioId) {
       'Solo se pueden cargar consumos a reservas con el huésped hospedado',
     );
 
-    const producto = await tx.producto.findUnique({ where: { id: productoId } });
-    if (!producto) {
-      throw new AppError('El producto no existe', 404);
-    }
+    for (const { productoId, cantidad } of items) {
+      const producto = await tx.producto.findUnique({ where: { id: productoId } });
+      if (!producto) {
+        throw new AppError('El producto no existe', 404);
+      }
 
-    const consumo = await tx.consumoHabitacion.create({
-      data: {
-        reservaId: id,
+      const consumo = await tx.consumoHabitacion.create({
+        data: {
+          reservaId: id,
+          productoId,
+          cantidad,
+          precioUnitario: producto.precioVenta,
+          registradoPorId: usuarioId,
+        },
+      });
+
+      await descontarStock(tx, {
         productoId,
         cantidad,
-        precioUnitario: producto.precioVenta,
-        registradoPorId: usuarioId,
-      },
-    });
-
-    await descontarStock(tx, {
-      productoId,
-      cantidad,
-      motivo: 'CONSUMO_HABITACION',
-      usuarioId,
-      consumoId: consumo.id,
-      observacion: `Cargado a la reserva ${reserva.codigo}`,
-    });
+        motivo: 'CONSUMO_HABITACION',
+        usuarioId,
+        consumoId: consumo.id,
+        observacion: `Cargado a la reserva ${reserva.codigo}`,
+      });
+    }
 
     return detalle(tx, id);
   });

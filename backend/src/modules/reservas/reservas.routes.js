@@ -26,7 +26,7 @@ reservasRoutes.post('/:id/checkin', conCobro, reservasController.checkin);
 reservasRoutes.post(
   '/:id/consumos',
   validate({ params: idParamSchema, body: consumoSchema }),
-  reservasController.registrarConsumo,
+  reservasController.registrarConsumos,
 );
 reservasRoutes.post('/:id/checkout', conCobro, reservasController.checkout);
 reservasRoutes.post('/:id/cancelar', soloId, reservasController.cancelar);

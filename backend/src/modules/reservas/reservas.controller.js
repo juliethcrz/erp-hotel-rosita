@@ -22,9 +22,10 @@ export async function checkin(req, res) {
   res.json(await reservasService.checkin(id, req.validated.body.pagos, req.user.id));
 }
 
-export async function registrarConsumo(req, res) {
+export async function registrarConsumos(req, res) {
   const { id } = req.validated.params;
-  res.status(201).json(await reservasService.registrarConsumo(id, req.validated.body, req.user.id));
+  const { items } = req.validated.body;
+  res.status(201).json(await reservasService.registrarConsumos(id, items, req.user.id));
 }
 
 export async function checkout(req, res) {

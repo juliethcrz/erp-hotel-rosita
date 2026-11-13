@@ -8,6 +8,7 @@ import { limpiezasRoutes } from './modules/limpiezas/limpiezas.routes.js';
 import { notificacionesRoutes } from './modules/notificaciones/notificaciones.routes.js';
 import { reservasRoutes } from './modules/reservas/reservas.routes.js';
 import { tarifasRoutes } from './modules/tarifas/tarifas.routes.js';
+import { tiendaRoutes } from './modules/tienda/tienda.routes.js';
 import { usuariosRoutes } from './modules/usuarios/usuarios.routes.js';
 
 export const apiRoutes = Router();
@@ -23,6 +24,7 @@ apiRoutes.use('/habitaciones', habitacionesRoutes);
 apiRoutes.use('/tarifas', tarifasRoutes);
 apiRoutes.use('/caja', cajaRoutes);
 apiRoutes.use('/inventario', inventarioRoutes);
+apiRoutes.use('/tienda', tiendaRoutes);
 apiRoutes.use('/reservas', reservasRoutes);
 apiRoutes.use('/limpiezas', limpiezasRoutes);
 apiRoutes.use('/notificaciones', notificacionesRoutes);

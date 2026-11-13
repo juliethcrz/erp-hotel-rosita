@@ -30,8 +30,9 @@ export const crearReservaSchema = z
   });
 
 export const consumoSchema = z.object({
-  productoId: id,
-  cantidad: z.number().int().positive().max(50),
+  items: z
+    .array(z.object({ productoId: id, cantidad: z.number().int().positive().max(50) }))
+    .min(1, 'Agregue al menos un producto'),
 });
 
 export const listarReservasSchema = z.object({

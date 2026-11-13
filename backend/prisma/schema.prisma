@@ -403,18 +403,19 @@ model ConsumoHabitacion {
 }
 
 model Venta {
-  id          Int         @id @default(autoincrement())
-  tipo        TipoVenta
-  estado      EstadoVenta @default(PAGADA)
-  reservaId   Int?        @map("reserva_id")
-  clienteId   Int?        @map("cliente_id")
-  cajaId      Int         @map("caja_id")
-  subtotal    Int
-  iva         Int
-  descuento   Int         @default(0)
-  total       Int
-  creadoPorId Int         @map("creado_por_id")
-  creadoEn    DateTime    @default(now()) @map("creado_en")
+  id              Int         @id @default(autoincrement())
+  tipo            TipoVenta
+  estado          EstadoVenta @default(PAGADA)
+  reservaId       Int?        @map("reserva_id")
+  clienteId       Int?        @map("cliente_id")
+  compradorNombre String?     @map("comprador_nombre") @db.VarChar(100)
+  cajaId          Int         @map("caja_id")
+  subtotal        Int
+  iva             Int
+  descuento       Int         @default(0)
+  total           Int
+  creadoPorId     Int         @map("creado_por_id")
+  creadoEn        DateTime    @default(now()) @map("creado_en")
 
   reserva               Reserva?               @relation(fields: [reservaId], references: [id])
   cliente               Cliente?               @relation(fields: [clienteId], references: [id])

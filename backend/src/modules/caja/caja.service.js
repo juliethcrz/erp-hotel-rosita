@@ -92,7 +92,16 @@ export async function historial() {
  */
 export async function registrarCobro(
   tx,
-  { tipo, reservaId = null, clienteId = null, detalles, descuento = 0, pagos, usuarioId },
+  {
+    tipo,
+    reservaId = null,
+    clienteId = null,
+    compradorNombre = null,
+    detalles,
+    descuento = 0,
+    pagos,
+    usuarioId,
+  },
 ) {
   const caja = await obtenerCajaAbierta(tx);
   const bruto = detalles.reduce(
@@ -113,6 +122,7 @@ export async function registrarCobro(
       tipo,
       reservaId,
       clienteId,
+      compradorNombre,
       cajaId: caja.id,
       subtotal,
       iva: total - subtotal,
@@ -136,7 +146,9 @@ export async function registrarCobro(
       tipo: 'INGRESO',
       metodo: pago.metodo,
       monto: pago.monto,
-      descripcion: `Comprobante ${venta.id}`,
+      descripcion: compradorNombre
+        ? `Comprobante ${venta.id} · ${compradorNombre}`
+        : `Comprobante ${venta.id}`,
       ventaId: venta.id,
       usuarioId,
     })),
