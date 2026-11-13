@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import { api } from '../../api/client.js';
 import { useAuth } from '../../auth/AuthContext.js';
 import { EncabezadoPagina } from '../../components/EncabezadoPagina.jsx';
@@ -106,6 +107,12 @@ export function RackPage() {
 
           <MensajeError error={error} />
 
+          {seleccionada.estado === 'EN_LIMPIEZA' && usuario.rol !== 'RECEPCIONISTA' && (
+            <Link to="/limpieza" className="boton boton-pequeno">
+              Ir a la pantalla de limpieza
+            </Link>
+          )}
+
           {opciones.length > 0 ? (
             <div className="acciones-modal">
               {opciones.map((estado) => (
@@ -116,15 +123,19 @@ export function RackPage() {
                   disabled={guardando}
                   onClick={() => cambiarEstado(estado)}
                 >
-                  Marcar como {ESTADOS_HABITACION[estado].toLowerCase()}
+                  {estado === 'EN_MANTENIMIENTO'
+                    ? 'Enviar a mantenimiento'
+                    : 'Marcar como disponible'}
                 </button>
               ))}
             </div>
           ) : (
             <p className="texto-suave">
-              {seleccionada.estado === 'OCUPADA'
-                ? 'El estado cambia al hacer el check-out.'
-                : 'Su rol no tiene cambios disponibles para esta habitación.'}
+              {seleccionada.estado === 'OCUPADA' && 'El estado cambia al hacer el check-out.'}
+              {seleccionada.estado === 'EN_LIMPIEZA' &&
+                'Housekeeping la marca como lista desde la pantalla de limpieza.'}
+              {['DISPONIBLE', 'EN_MANTENIMIENTO'].includes(seleccionada.estado) &&
+                'El mantenimiento lo maneja el administrador.'}
             </p>
           )}
         </Modal>

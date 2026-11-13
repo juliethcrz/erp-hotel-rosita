@@ -18,18 +18,40 @@ export const ESTADOS_HABITACION = {
   EN_MANTENIMIENTO: 'En mantenimiento',
 };
 
-const ESTADOS_MANUALES = ['DISPONIBLE', 'EN_LIMPIEZA', 'EN_MANTENIMIENTO'];
+export const ESTADOS_RESERVA = {
+  PENDIENTE: 'Pendiente de anticipo',
+  CONFIRMADA: 'Confirmada',
+  EN_CURSO: 'En curso',
+  FINALIZADA: 'Finalizada',
+  CANCELADA: 'Cancelada',
+  NO_SHOW: 'No-show',
+};
 
+export const TIPOS_COBRO = {
+  ANTICIPO: 'Anticipo',
+  SALDO_CHECKIN: 'Saldo en el check-in',
+  CONSUMOS_CHECKOUT: 'Consumos en el check-out',
+  VENTA_DIRECTA: 'Venta en tienda',
+};
+
+export const METODOS_PAGO = {
+  EFECTIVO: 'Efectivo',
+  NEQUI: 'Nequi',
+  DAVIPLATA: 'Daviplata',
+  BANCOLOMBIA: 'Bancolombia',
+  TRANSFERENCIA: 'Transferencia',
+};
+
+// La limpieza la mueven el check-out y housekeeping; a mano solo queda el
+// mantenimiento, a cargo del administrador.
 export function estadosPermitidos(rol, estadoActual) {
-  if (estadoActual === 'OCUPADA') return [];
+  if (rol !== 'ADMIN') return [];
 
-  const opciones = {
-    ADMIN: ESTADOS_MANUALES,
-    RECEPCIONISTA: ['DISPONIBLE', 'EN_LIMPIEZA'].includes(estadoActual)
-      ? ['DISPONIBLE', 'EN_LIMPIEZA']
-      : [],
-    HOUSEKEEPING: estadoActual === 'EN_LIMPIEZA' ? ['DISPONIBLE'] : [],
+  const transiciones = {
+    DISPONIBLE: ['EN_MANTENIMIENTO'],
+    EN_MANTENIMIENTO: ['DISPONIBLE'],
+    EN_LIMPIEZA: ['DISPONIBLE'],
   };
 
-  return opciones[rol].filter((estado) => estado !== estadoActual);
+  return transiciones[estadoActual] ?? [];
 }

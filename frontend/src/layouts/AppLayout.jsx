@@ -1,6 +1,7 @@
 import { Hotel, LogOut } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router';
 import { useAuth } from '../auth/AuthContext.js';
+import { Notificaciones } from '../components/Notificaciones.jsx';
 import { ROLES } from '../constants/catalogos.js';
 import { MENU } from '../constants/navegacion.js';
 
@@ -14,6 +15,7 @@ export function AppLayout() {
         <div className="marca">
           <Hotel size={24} />
           <span>Hotel Rosita</span>
+          <Notificaciones />
         </div>
 
         <nav className="menu">
