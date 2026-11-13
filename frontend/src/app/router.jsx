@@ -9,6 +9,7 @@ import { InventarioPage } from '../features/inventario/pages/InventarioPage.jsx'
 import { LimpiezaPage } from '../features/limpieza/pages/LimpiezaPage.jsx';
 import { NuevaReservaPage } from '../features/reservas/pages/NuevaReservaPage.jsx';
 import { ReservaDetallePage } from '../features/reservas/pages/ReservaDetallePage.jsx';
+import { ReportesPage } from '../features/reportes/pages/ReportesPage.jsx';
 import { ReservasPage } from '../features/reservas/pages/ReservasPage.jsx';
 import { TiendaPage } from '../features/tienda/pages/TiendaPage.jsx';
 import { UsuariosPage } from '../features/usuarios/pages/UsuariosPage.jsx';
@@ -42,7 +43,10 @@ export const router = createBrowserRouter([
           },
           {
             element: <RequireAuth roles={['ADMIN']} />,
-            children: [{ path: 'usuarios', element: <UsuariosPage /> }],
+            children: [
+              { path: 'usuarios', element: <UsuariosPage /> },
+              { path: 'reportes', element: <ReportesPage /> },
+            ],
           },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

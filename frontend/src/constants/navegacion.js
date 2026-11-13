@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   BedDouble,
   CalendarDays,
   LayoutDashboard,
@@ -21,6 +22,7 @@ export const MENU = [
   { ruta: '/inventario', etiqueta: 'Inventario', icono: Package, roles: RECEPCION },
   { ruta: '/caja', etiqueta: 'Caja', icono: Wallet, roles: RECEPCION },
   { ruta: '/clientes', etiqueta: 'Clientes', icono: Users, roles: RECEPCION },
+  { ruta: '/reportes', etiqueta: 'Reportes', icono: BarChart3, roles: ['ADMIN'] },
   { ruta: '/usuarios', etiqueta: 'Usuarios', icono: UserCog, roles: ['ADMIN'] },
 ];
 

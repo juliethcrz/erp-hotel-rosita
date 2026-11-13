@@ -1,0 +1,68 @@
+.contenedor {
+  overflow-x: auto;
+}
+
+.grafico {
+  display: grid;
+  grid-template-columns: repeat(var(--columnas), minmax(14px, 1fr));
+  gap: 4px;
+  min-width: calc(var(--columnas) * 18px);
+  height: 220px;
+  padding-top: var(--espacio-5);
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.barra {
+  position: relative;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, var(--verde-400), var(--verde-700));
+  transition: var(--transicion);
+  animation: crecer 500ms ease both;
+  transform-origin: bottom;
+}
+
+.barra:hover {
+  background: linear-gradient(180deg, var(--verde-300), var(--verde-900));
+}
+
+.valor {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 1;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--verde-950);
+  color: var(--blanco);
+  font-size: var(--texto-xs);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 150ms ease;
+}
+
+.barra:hover .valor {
+  opacity: 1;
+}
+
+.etiqueta {
+  height: 22px;
+  margin-top: 6px;
+  overflow: visible;
+  color: var(--texto-tenue);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+@keyframes crecer {
+  from {
+    transform: scaleY(0);
+  }
+}

@@ -40,7 +40,7 @@ export function renovarSesion() {
   return renovacionEnCurso;
 }
 
-async function solicitar(ruta, { method = 'GET', body, reintentar = true } = {}) {
+async function solicitar(ruta, { method = 'GET', body, archivo = false, reintentar = true } = {}) {
   const esFormulario = body instanceof FormData;
   const headers = {};
   if (body !== undefined && !esFormulario) headers['Content-Type'] = 'application/json';
@@ -55,11 +55,12 @@ async function solicitar(ruta, { method = 'GET', body, reintentar = true } = {})
 
   if (respuesta.status === 401 && reintentar && !ruta.startsWith('/auth/')) {
     const sesion = await renovarSesion();
-    if (sesion) return solicitar(ruta, { method, body, reintentar: false });
+    if (sesion) return solicitar(ruta, { method, body, archivo, reintentar: false });
     alExpirarSesion();
   }
 
   if (respuesta.status === 204) return null;
+  if (archivo && respuesta.ok) return respuesta.blob();
 
   const datos = await respuesta.json().catch(() => null);
   if (!respuesta.ok) {
@@ -78,4 +79,5 @@ export const api = {
   post: (ruta, body = {}) => solicitar(ruta, { method: 'POST', body }),
   patch: (ruta, body) => solicitar(ruta, { method: 'PATCH', body }),
   delete: (ruta) => solicitar(ruta, { method: 'DELETE' }),
+  descargar: (ruta) => solicitar(ruta, { archivo: true }),
 };

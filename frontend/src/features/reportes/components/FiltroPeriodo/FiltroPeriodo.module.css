@@ -1,0 +1,80 @@
+.filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  margin-bottom: var(--espacio-5);
+  padding: var(--espacio-4);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+}
+
+.atajos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.atajo {
+  padding: 8px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora);
+  background: var(--superficie-suave);
+  color: var(--texto-suave);
+  font: inherit;
+  font-size: var(--texto-sm);
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.atajo:hover {
+  border-color: var(--verde-400);
+  color: var(--texto);
+}
+
+.activo {
+  border-color: transparent;
+  background: var(--degradado-primario);
+  color: var(--blanco);
+}
+
+.activo:hover {
+  color: var(--blanco);
+}
+
+.fechas {
+  display: flex;
+  gap: var(--espacio-3);
+}
+
+.fechas label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+}
+
+.fechas input {
+  min-height: 40px;
+  padding: 0 var(--espacio-3);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+}
+
+@media (max-width: 560px) {
+  .fechas {
+    width: 100%;
+  }
+
+  .fechas label {
+    flex: 1;
+  }
+}

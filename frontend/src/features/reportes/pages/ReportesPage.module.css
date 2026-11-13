@@ -1,0 +1,4 @@
+.pestanas {
+  margin-bottom: var(--espacio-4);
+  overflow-x: auto;
+}
