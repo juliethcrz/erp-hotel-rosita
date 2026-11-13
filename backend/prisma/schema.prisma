@@ -86,6 +86,12 @@ enum TipoMovimientoCaja {
   EGRESO
 }
 
+enum EstadoLimpieza {
+  PENDIENTE
+  EN_PROCESO
+  TERMINADA
+}
+
 // ─── Acceso ────────────────────────────────────────────────────
 
 model Usuario {
@@ -108,6 +114,8 @@ model Usuario {
   cajasAbiertas         Caja[]                 @relation("CajaAbiertaPor")
   cajasCerradas         Caja[]                 @relation("CajaCerradaPor")
   movimientosCaja       CajaMovimiento[]
+  limpiezas             Limpieza[]
+  notificacionesLeidas  Notificacion[]
 
   @@map("usuarios")
 }
@@ -173,9 +181,11 @@ model Habitacion {
   descripcion String?
   activa      Boolean          @default(true)
 
-  tipo      TipoHabitacion      @relation(fields: [tipoId], references: [id])
-  reservas  ReservaHabitacion[]
-  huespedes ReservaHuesped[]
+  tipo           TipoHabitacion      @relation(fields: [tipoId], references: [id])
+  reservas       ReservaHabitacion[]
+  huespedes      ReservaHuesped[]
+  limpiezas      Limpieza[]
+  notificaciones Notificacion[]
 
   @@index([tipoId])
   @@map("habitaciones")
@@ -229,6 +239,7 @@ model Reserva {
   huespedes    ReservaHuesped[]
   consumos     ConsumoHabitacion[]
   ventas       Venta[]
+  limpiezas    Limpieza[]
 
   @@index([titularId])
   @@index([estado])
@@ -242,6 +253,7 @@ model ReservaHabitacion {
   habitacionId Int @map("habitacion_id")
   tarifaNoche  Int @map("tarifa_noche")
   noches       Int
+  subtotal     Int
 
   reserva    Reserva    @relation(fields: [reservaId], references: [id], onDelete: Cascade)
   habitacion Habitacion @relation(fields: [habitacionId], references: [id])
@@ -494,4 +506,44 @@ model Configuracion {
   actualizadoEn DateTime @updatedAt @map("actualizado_en")
 
   @@map("configuracion")
+}
+
+// ─── Limpieza y notificaciones ─────────────────────────────────
+
+model Limpieza {
+  id            Int            @id @default(autoincrement())
+  habitacionId  Int            @map("habitacion_id")
+  reservaId     Int?           @map("reserva_id")
+  estado        EstadoLimpieza @default(PENDIENTE)
+  responsableId Int?           @map("responsable_id")
+  observaciones String?
+  creadaEn      DateTime       @default(now()) @map("creada_en")
+  iniciadaEn    DateTime?      @map("iniciada_en")
+  terminadaEn   DateTime?      @map("terminada_en")
+
+  habitacion  Habitacion @relation(fields: [habitacionId], references: [id])
+  reserva     Reserva?   @relation(fields: [reservaId], references: [id])
+  responsable Usuario?   @relation(fields: [responsableId], references: [id])
+
+  @@index([estado])
+  @@index([habitacionId])
+  @@map("limpiezas")
+}
+
+model Notificacion {
+  id           Int       @id @default(autoincrement())
+  rolDestino   Rol       @map("rol_destino")
+  titulo       String    @db.VarChar(120)
+  mensaje      String
+  habitacionId Int?      @map("habitacion_id")
+  leida        Boolean   @default(false)
+  leidaPorId   Int?      @map("leida_por_id")
+  leidaEn      DateTime? @map("leida_en")
+  creadaEn     DateTime  @default(now()) @map("creada_en")
+
+  habitacion Habitacion? @relation(fields: [habitacionId], references: [id])
+  leidaPor   Usuario?    @relation(fields: [leidaPorId], references: [id])
+
+  @@index([rolDestino, leida])
+  @@map("notificaciones")
 }
