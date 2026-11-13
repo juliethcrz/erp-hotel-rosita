@@ -1,0 +1,117 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-4);
+  border-top: 1px solid var(--borde);
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.encabezado h3 {
+  font-size: var(--texto-base, 1rem);
+  font-weight: 600;
+}
+
+.encabezado span {
+  margin-left: 6px;
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+  font-weight: 400;
+}
+
+.vacio {
+  padding: var(--espacio-4);
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio);
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+  text-align: center;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espacio-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radio-sm);
+  background: var(--superficie-suave);
+  box-shadow: var(--sombra-sm);
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.principal {
+  outline: 2px solid var(--verde-400);
+  outline-offset: 2px;
+}
+
+.etiqueta {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 10px;
+  border-radius: var(--radio-pildora);
+  background: var(--verde-950);
+  color: var(--blanco);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+}
+
+.acciones {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px;
+  background: linear-gradient(to top, rgb(5 31 32 / 0.75), transparent);
+}
+
+.acciones button {
+  display: grid;
+  min-width: 30px;
+  height: 30px;
+  place-items: center;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(6px);
+  color: var(--blanco);
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.acciones button:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.32);
+}
+
+.acciones button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.acciones .confirmar {
+  background: var(--peligro);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+}

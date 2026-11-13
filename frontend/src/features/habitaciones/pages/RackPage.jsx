@@ -10,7 +10,7 @@ import estilos from './RackPage.module.css';
 
 export function RackPage() {
   const { usuario } = useAuth();
-  const { habitaciones, error, cambiarEstado } = useHabitaciones();
+  const { habitaciones, error, cambiarEstado, recargar } = useHabitaciones();
   const [filtro, setFiltro] = useState(null);
   const [seleccionadaId, setSeleccionadaId] = useState(null);
 
@@ -55,6 +55,7 @@ export function RackPage() {
           habitacion={seleccionada}
           rol={usuario.rol}
           onCambiarEstado={cambiarEstado}
+          onFotosCambiadas={recargar}
           onCerrar={() => setSeleccionadaId(null)}
         />
       )}

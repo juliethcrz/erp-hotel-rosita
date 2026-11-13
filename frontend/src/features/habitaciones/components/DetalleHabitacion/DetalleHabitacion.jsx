@@ -12,6 +12,8 @@ import { cx } from '../../../../lib/clases.js';
 import { formatearPesos } from '../../../../lib/formato.js';
 import { estadosPermitidos, TONO_ESTADO } from '../../utils/estadosHabitacion.js';
 import { agruparCaracteristicas, textoCamas } from '../../utils/fichaHabitacion.js';
+import { EditorFotos } from '../EditorFotos/EditorFotos.jsx';
+import { GaleriaFotos } from '../GaleriaFotos/GaleriaFotos.jsx';
 import estilos from './DetalleHabitacion.module.css';
 
 const TEXTO_ACCION = {
@@ -25,7 +27,13 @@ const AYUDA_ESTADO = {
 };
 
 /** Panel deslizante con la ficha de la habitación y sus acciones. */
-export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }) {
+export function DetalleHabitacion({
+  habitacion,
+  rol,
+  onCambiarEstado,
+  onFotosCambiadas,
+  onCerrar,
+}) {
   const [error, setError] = useState(null);
   const [guardando, setGuardando] = useState(false);
   const {
@@ -56,7 +64,11 @@ export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }
 
   const cabecera = (
     <div className={cx(estilos.portada, estilos[`tipo${tipo.id % 4}`])}>
-      <BedDouble className={estilos.icono} size={64} strokeWidth={1.2} aria-hidden="true" />
+      {habitacion.fotos?.length > 0 ? (
+        <GaleriaFotos fotos={habitacion.fotos} numero={numero} />
+      ) : (
+        <BedDouble className={estilos.icono} size={64} strokeWidth={1.2} aria-hidden="true" />
+      )}
       <button type="button" className={estilos.cerrar} onClick={onCerrar} aria-label="Cerrar">
         <X size={18} />
       </button>
@@ -118,6 +130,8 @@ export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }
         {reservaHoy && (
           <ListaValores filas={[{ etiqueta: 'Reserva de hoy', valor: reservaHoy.codigo }]} />
         )}
+
+        {rol === 'ADMIN' && <EditorFotos habitacion={habitacion} onCambio={onFotosCambiadas} />}
 
         {AYUDA_ESTADO[estado] && <p className={estilos.ayuda}>{AYUDA_ESTADO[estado]}</p>}
 
