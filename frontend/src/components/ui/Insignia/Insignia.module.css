@@ -1,0 +1,47 @@
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radio-pildora);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.neutro {
+  background: var(--verde-50);
+  color: var(--texto-suave);
+}
+
+.marca {
+  background: var(--verde-100);
+  color: var(--verde-800);
+}
+
+.exito {
+  background: var(--exito-fondo);
+  color: #1d6f4b;
+}
+
+.aviso {
+  background: var(--aviso-fondo);
+  color: #8a5307;
+}
+
+.peligro {
+  background: var(--peligro-fondo);
+  color: #9c2731;
+}
+
+.info {
+  background: var(--info-fondo);
+  color: #24589e;
+}

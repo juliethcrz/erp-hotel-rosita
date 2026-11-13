@@ -1,0 +1,22 @@
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: var(--espacio-4);
+  align-items: start;
+}
+
+.seccion {
+  margin-top: var(--espacio-4);
+}
+
+.nota {
+  margin: var(--espacio-3) 0 0;
+  color: var(--texto-suave);
+  font-size: var(--texto-sm);
+}
+
+@media (max-width: 900px) {
+  .columnas {
+    grid-template-columns: 1fr;
+  }
+}

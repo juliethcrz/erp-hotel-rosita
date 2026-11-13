@@ -1,0 +1,31 @@
+.app {
+  display: grid;
+  grid-template-columns: var(--ancho-barra) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.contenido {
+  width: 100%;
+  max-width: 1400px;
+  padding: 36px 40px 48px;
+}
+
+@media (max-width: 1100px) {
+  .app {
+    grid-template-columns: var(--ancho-barra-compacta) minmax(0, 1fr);
+  }
+
+  .contenido {
+    padding: 28px 28px 40px;
+  }
+}
+
+@media (max-width: 720px) {
+  .app {
+    display: block;
+  }
+
+  .contenido {
+    padding: 20px 16px calc(var(--alto-navegacion-movil) + 28px);
+  }
+}

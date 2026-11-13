@@ -1,0 +1,116 @@
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--transicion),
+    box-shadow var(--transicion),
+    border-color var(--transicion);
+  animation: aparecer 320ms ease both;
+}
+
+.tarjeta:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra-elevada);
+}
+
+.seleccionada {
+  border-color: var(--verde-400);
+  box-shadow: var(--anillo-foco), var(--sombra-elevada);
+}
+
+.foto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--degradado-foto);
+}
+
+.foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.tarjeta:hover .foto img {
+  transform: scale(1.05);
+}
+
+.tipo0 {
+  background: linear-gradient(140deg, #8eb69b, #235347);
+}
+
+.tipo1 {
+  background: linear-gradient(140deg, #6f9e84, #163832);
+}
+
+.tipo2 {
+  background: linear-gradient(140deg, #4f8873, #0b2b26);
+}
+
+.tipo3 {
+  background: linear-gradient(140deg, #2f6a59, #051f20);
+}
+
+.numero {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  z-index: 1;
+  color: var(--blanco);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.3);
+}
+
+.estado {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+.datos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  font-size: var(--texto-sm);
+}
+
+.datos strong {
+  font-weight: 500;
+}
+
+.datos span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--texto-tenue);
+}
+
+.pie {
+  padding: 0 14px 12px;
+  color: var(--verde-700);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+}

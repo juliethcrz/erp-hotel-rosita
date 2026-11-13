@@ -1,0 +1,30 @@
+.encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  margin-bottom: var(--espacio-5);
+}
+
+.encabezado h1 {
+  font-size: var(--texto-xl);
+}
+
+.antetitulo {
+  margin-bottom: 2px;
+  color: var(--verde-600);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+}
+
+.descripcion {
+  margin-top: 6px;
+  color: var(--texto-suave);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}

@@ -1,0 +1,30 @@
+.filtros {
+  display: flex;
+  margin-bottom: var(--espacio-4);
+  max-width: 480px;
+}
+
+.nombre {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-weight: 500;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--degradado-suave);
+  color: var(--verde-800);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+}
+
+.vacio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}

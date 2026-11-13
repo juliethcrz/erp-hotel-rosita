@@ -1,0 +1,32 @@
+.alerta {
+  display: flex;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1px solid;
+  border-radius: var(--radio);
+  font-size: var(--texto-sm);
+  animation: aparecer 240ms ease both;
+}
+
+.alerta svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alerta ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.error {
+  border-color: rgb(201 58 69 / 0.2);
+  background: var(--peligro-fondo);
+  color: #9c2731;
+}
+
+.exito {
+  border-color: rgb(47 158 110 / 0.2);
+  background: var(--exito-fondo);
+  color: #1d6f4b;
+}

@@ -1,0 +1,4 @@
+.anulada {
+  color: var(--texto-tenue);
+  text-decoration: line-through;
+}

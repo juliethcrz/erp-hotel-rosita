@@ -1,0 +1,128 @@
+.contenedor {
+  position: relative;
+}
+
+.campana {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.06);
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--transicion);
+}
+
+.campana:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.contador {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 19px;
+  padding: 0 5px;
+  border: 2px solid var(--verde-900);
+  border-radius: var(--radio-pildora);
+  background: #e5484d;
+  color: var(--blanco);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 15px;
+  text-align: center;
+}
+
+.panel {
+  position: absolute;
+  z-index: 40;
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra-lg);
+  color: var(--texto);
+  animation: aparecer 200ms ease both;
+}
+
+.lateral {
+  top: 0;
+  left: calc(100% + 18px);
+}
+
+.abajo {
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(360px, calc(100vw - 24px));
+}
+
+.panel header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4);
+  border-bottom: 1px solid var(--borde);
+  background: var(--superficie);
+}
+
+.leerTodas {
+  border: none;
+  background: none;
+  color: var(--verde-700);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.panel ul {
+  margin: 0;
+  padding: var(--espacio-2);
+  list-style: none;
+}
+
+.aviso {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: var(--espacio-3);
+  border: none;
+  border-radius: var(--radio);
+  background: none;
+  font-size: var(--texto-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.aviso:hover {
+  background: var(--superficie-suave);
+}
+
+.aviso span {
+  color: var(--texto-suave);
+}
+
+.aviso small {
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
+}
+
+.noLeida {
+  background: var(--verde-50);
+  box-shadow: inset 3px 0 0 var(--verde-400);
+}
+
+.vacio {
+  padding: var(--espacio-5);
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+  text-align: center;
+}

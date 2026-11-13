@@ -1,0 +1,29 @@
+.secciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+}
+
+.historial {
+  margin-top: var(--espacio-6);
+}
+
+.subtitulo {
+  margin-bottom: var(--espacio-3);
+  font-size: var(--texto-lg);
+}
+
+.texto {
+  margin-bottom: var(--espacio-4);
+  color: var(--texto-suave);
+}
+
+.ingreso {
+  color: var(--exito);
+  font-weight: 500;
+}
+
+.egreso {
+  color: var(--peligro);
+  font-weight: 500;
+}

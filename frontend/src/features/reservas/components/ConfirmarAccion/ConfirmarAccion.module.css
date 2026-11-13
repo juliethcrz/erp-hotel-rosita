@@ -1,0 +1,5 @@
+.mensaje {
+  margin: 0;
+  color: var(--texto-suave);
+  line-height: 1.6;
+}

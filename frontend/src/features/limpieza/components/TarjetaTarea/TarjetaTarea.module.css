@@ -1,0 +1,45 @@
+.tarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+  animation: aparecer 260ms ease both;
+}
+
+.encabezado {
+  display: flex;
+  align-items: baseline;
+  gap: var(--espacio-2);
+}
+
+.numero {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.tipo {
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-suave);
+  font-size: var(--texto-xs);
+}
+
+.observacion {
+  padding: var(--espacio-2) var(--espacio-3);
+  border-radius: var(--radio-sm);
+  background: var(--superficie-suave);
+  color: var(--texto-suave);
+  font-size: var(--texto-sm);
+  font-style: italic;
+}

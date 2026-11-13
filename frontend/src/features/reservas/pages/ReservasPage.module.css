@@ -1,0 +1,33 @@
+.filtros {
+  display: flex;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+}
+
+.filtros > :first-child {
+  flex: 1;
+}
+
+.selector {
+  min-height: 44px;
+  padding: 0 var(--espacio-4);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+
+.codigo {
+  color: var(--verde-700);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.codigo:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .filtros {
+    flex-direction: column;
+  }
+}

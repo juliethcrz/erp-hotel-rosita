@@ -1,0 +1,119 @@
+.contenedor {
+  overflow-x: auto;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--texto-sm);
+}
+
+.tabla th {
+  padding: 14px 18px;
+  background: var(--superficie-suave);
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabla td {
+  padding: 14px 18px;
+  border-top: 1px solid var(--borde);
+}
+
+.tabla tbody tr {
+  transition: background var(--transicion);
+}
+
+.tabla tbody tr:hover {
+  background: var(--verde-50);
+}
+
+.numero {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.acciones {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.acciones > * + * {
+  margin-left: var(--espacio-2);
+}
+
+.vacia {
+  padding: var(--espacio-6) !important;
+  color: var(--texto-tenue);
+  text-align: center !important;
+}
+
+@media (max-width: 720px) {
+  .contenedor {
+    border: none;
+    background: none;
+    box-shadow: none;
+  }
+
+  .tabla thead {
+    display: none;
+  }
+
+  .tabla tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+  }
+
+  .tabla tr {
+    display: block;
+    padding: var(--espacio-3) var(--espacio-4);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    box-shadow: var(--sombra-sm);
+  }
+
+  .tabla td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--espacio-4);
+    padding: 6px 0;
+    border: none;
+    text-align: right;
+  }
+
+  .tabla td::before {
+    content: attr(data-titulo);
+    color: var(--texto-tenue);
+    font-size: var(--texto-xs);
+    text-align: left;
+  }
+
+  .tabla td:empty,
+  .acciones::before {
+    display: none !important;
+  }
+
+  .acciones {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-top: var(--espacio-2) !important;
+  }
+
+  .vacia {
+    display: block !important;
+  }
+
+  .vacia::before {
+    display: none;
+  }
+}

@@ -1,0 +1,45 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.monto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--espacio-4) var(--espacio-5);
+  border-radius: var(--radio);
+  background: var(--degradado-marca);
+  color: var(--verde-200);
+}
+
+.monto strong {
+  color: var(--blanco);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr 32px;
+  gap: var(--espacio-2);
+  align-items: center;
+}
+
+.fila :is(select, input) {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+}
+
+.agregar {
+  align-self: flex-start;
+}
+
+.diferencia {
+  color: var(--aviso);
+  font-size: var(--texto-sm);
+}

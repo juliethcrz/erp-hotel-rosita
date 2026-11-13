@@ -1,0 +1,16 @@
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  margin-bottom: var(--espacio-5);
+}
+
+.acciones:empty {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .acciones > * {
+    flex: 1 1 100%;
+  }
+}

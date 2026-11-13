@@ -1,0 +1,55 @@
+.angosta {
+  max-width: 560px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.formulario > button {
+  align-self: flex-end;
+}
+
+.contexto {
+  margin: 0 0 var(--espacio-4);
+  color: var(--texto-suave);
+}
+
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-5);
+}
+
+.confirmacion {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: var(--espacio-4);
+  align-items: start;
+}
+
+.botonesTotal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-4);
+}
+
+@media (max-width: 900px) {
+  .confirmacion {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .navegacion {
+    flex-direction: column-reverse;
+  }
+
+  .formulario > button {
+    align-self: stretch;
+  }
+}

@@ -1,0 +1,28 @@
+.buscador {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-width: 220px;
+  min-height: 46px;
+  padding: 0 var(--espacio-4);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora);
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+  color: var(--texto-tenue);
+  transition: box-shadow var(--transicion);
+}
+
+.buscador:focus-within {
+  box-shadow: var(--anillo-foco);
+}
+
+.buscador input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--texto);
+}

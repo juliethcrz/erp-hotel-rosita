@@ -41,17 +41,3 @@ export const METODOS_PAGO = {
   BANCOLOMBIA: 'Bancolombia',
   TRANSFERENCIA: 'Transferencia',
 };
-
-// La limpieza la mueven el check-out y housekeeping; a mano solo queda el
-// mantenimiento, a cargo del administrador.
-export function estadosPermitidos(rol, estadoActual) {
-  if (rol !== 'ADMIN') return [];
-
-  const transiciones = {
-    DISPONIBLE: ['EN_MANTENIMIENTO'],
-    EN_MANTENIMIENTO: ['DISPONIBLE'],
-    EN_LIMPIEZA: ['DISPONIBLE'],
-  };
-
-  return transiciones[estadoActual] ?? [];
-}

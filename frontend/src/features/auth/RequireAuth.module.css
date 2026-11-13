@@ -1,0 +1,20 @@
+.carga {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+.indicador {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--verde-100);
+  border-top-color: var(--verde-700);
+  border-radius: 50%;
+  animation: girar 800ms linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

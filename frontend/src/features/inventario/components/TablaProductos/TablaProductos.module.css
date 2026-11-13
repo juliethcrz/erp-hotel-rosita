@@ -1,0 +1,17 @@
+.nombre {
+  font-weight: 500;
+}
+
+.inactivo {
+  color: var(--texto-tenue);
+}
+
+.stock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.stock small {
+  color: var(--texto-tenue);
+}
