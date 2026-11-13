@@ -97,8 +97,54 @@
   font-weight: 600;
 }
 
+.camas {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  color: var(--verde-800);
+  font-weight: 500;
+}
+
+.camas svg {
+  color: var(--verde-600);
+}
+
 .descripcion {
   color: var(--texto-suave);
+  line-height: 1.6;
+}
+
+.comodidades {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.comodidades h3 {
+  margin-bottom: var(--espacio-2);
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.comodidades ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comodidades li {
+  padding: 6px 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora);
+  background: var(--superficie-suave);
+  color: var(--texto);
+  font-size: var(--texto-sm);
 }
 
 .ayuda {

@@ -6,7 +6,7 @@ import { TONO_ESTADO } from '../../utils/estadosHabitacion.js';
 import estilos from './TarjetaHabitacion.module.css';
 
 export function TarjetaHabitacion({ habitacion, seleccionada, onSeleccionar, pie }) {
-  const { numero, tipo, estadoRack, fotoPrincipal } = habitacion;
+  const { numero, nombre, tipo, estadoRack, fotoPrincipal } = habitacion;
 
   return (
     <button
@@ -30,7 +30,10 @@ export function TarjetaHabitacion({ habitacion, seleccionada, onSeleccionar, pie
         )}
       </div>
       <div className={estilos.datos}>
-        <strong>{tipo.nombre}</strong>
+        <div className={estilos.nombres}>
+          <strong>{nombre ?? tipo.nombre}</strong>
+          {nombre && <small>{tipo.nombre}</small>}
+        </div>
         <span>
           <Users size={14} aria-hidden="true" /> {tipo.capacidadMaxima}
         </span>

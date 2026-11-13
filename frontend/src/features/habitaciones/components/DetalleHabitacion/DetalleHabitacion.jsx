@@ -1,4 +1,4 @@
-import { BedDouble, CalendarPlus, Users, Wrench, X } from 'lucide-react';
+import { BedDouble, BedSingle, CalendarPlus, Users, Wrench, X } from 'lucide-react';
 import { useState } from 'react';
 import {
   AlertaError,
@@ -11,6 +11,7 @@ import { ESTADOS_HABITACION } from '../../../../constants/catalogos.js';
 import { cx } from '../../../../lib/clases.js';
 import { formatearPesos } from '../../../../lib/formato.js';
 import { estadosPermitidos, TONO_ESTADO } from '../../utils/estadosHabitacion.js';
+import { agruparCaracteristicas, textoCamas } from '../../utils/fichaHabitacion.js';
 import estilos from './DetalleHabitacion.module.css';
 
 const TEXTO_ACCION = {
@@ -27,7 +28,18 @@ const AYUDA_ESTADO = {
 export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }) {
   const [error, setError] = useState(null);
   const [guardando, setGuardando] = useState(false);
-  const { numero, tipo, estado, estadoRack, reservaHoy, descripcion } = habitacion;
+  const {
+    numero,
+    nombre,
+    tipo,
+    estado,
+    estadoRack,
+    reservaHoy,
+    descripcion,
+    camas,
+    caracteristicas,
+  } = habitacion;
+  const grupos = agruparCaracteristicas(caracteristicas);
   const acciones = estadosPermitidos(rol, estado);
 
   const cambiar = async (nuevoEstado) => {
@@ -54,6 +66,7 @@ export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }
         </Insignia>
         <h2>Habitación {numero}</h2>
         <p>
+          {nombre ? `${nombre} · ` : ''}
           {tipo.nombre} · piso {habitacion.piso}
         </p>
       </div>
@@ -76,8 +89,30 @@ export function DetalleHabitacion({ habitacion, rol, onCambiarEstado, onCerrar }
           </div>
         </div>
 
+        {camas?.length > 0 && (
+          <p className={estilos.camas}>
+            <BedSingle size={18} aria-hidden="true" />
+            {textoCamas(camas)}
+          </p>
+        )}
+
         {(descripcion || tipo.descripcion) && (
           <p className={estilos.descripcion}>{descripcion || tipo.descripcion}</p>
+        )}
+
+        {grupos.length > 0 && (
+          <section className={estilos.comodidades} aria-label="Comodidades">
+            {grupos.map((grupo) => (
+              <div key={grupo.categoria}>
+                <h3>{grupo.titulo}</h3>
+                <ul>
+                  {grupo.items.map((item) => (
+                    <li key={item.id}>{item.nombre}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </section>
         )}
 
         {reservaHoy && (

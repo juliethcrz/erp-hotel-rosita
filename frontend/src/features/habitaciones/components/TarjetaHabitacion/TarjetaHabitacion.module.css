@@ -97,8 +97,22 @@
   font-size: var(--texto-sm);
 }
 
-.datos strong {
-  font-weight: 500;
+.nombres {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nombres strong {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nombres small {
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
 }
 
 .datos span {
