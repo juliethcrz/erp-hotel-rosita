@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { api } from '../../api/client.js';
@@ -10,10 +10,11 @@ import { Modal } from '../../components/Modal.jsx';
 import { METODOS_PAGO, TIPOS_COBRO } from '../../constants/catalogos.js';
 import { formatearFecha, formatearFechaHora, formatearPesos } from '../../utils/formato.js';
 
+const LINEA_VACIA = { productoId: '', cantidad: 1 };
+
 function FormularioConsumo({ onGuardar, onCancelar }) {
   const [productos, setProductos] = useState([]);
-  const [productoId, setProductoId] = useState('');
-  const [cantidad, setCantidad] = useState(1);
+  const [lineas, setLineas] = useState([LINEA_VACIA]);
   const [error, setError] = useState(null);
   const [guardando, setGuardando] = useState(false);
 
@@ -21,14 +22,30 @@ function FormularioConsumo({ onGuardar, onCancelar }) {
     api.get('/inventario/productos').then(setProductos).catch(setError);
   }, []);
 
-  const producto = productos.find((p) => p.id === Number(productoId));
+  const buscar = (productoId) => productos.find((p) => p.id === Number(productoId));
+
+  const actualizar = (indice, campo, valor) => {
+    setLineas(lineas.map((linea, i) => (i === indice ? { ...linea, [campo]: valor } : linea)));
+  };
+
+  const elegidos = lineas.map((linea) => linea.productoId).filter(Boolean);
+  const total = lineas.reduce(
+    (suma, linea) =>
+      suma + (buscar(linea.productoId)?.precioVenta ?? 0) * Number(linea.cantidad || 0),
+    0,
+  );
 
   const enviar = async (evento) => {
     evento.preventDefault();
     setGuardando(true);
     setError(null);
     try {
-      await onGuardar({ productoId: Number(productoId), cantidad: Number(cantidad) });
+      await onGuardar({
+        items: lineas.map((linea) => ({
+          productoId: Number(linea.productoId),
+          cantidad: Number(linea.cantidad),
+        })),
+      });
     } catch (err) {
       setError(err);
       setGuardando(false);
@@ -38,35 +55,68 @@ function FormularioConsumo({ onGuardar, onCancelar }) {
   return (
     <form className="formulario" onSubmit={enviar}>
       <MensajeError error={error} />
-      <label className="campo">
-        <span>Producto</span>
-        <select value={productoId} onChange={(e) => setProductoId(e.target.value)} required>
-          <option value="">Seleccione…</option>
-          {productos.map((p) => (
-            <option key={p.id} value={p.id} disabled={p.stockActual === 0}>
-              {p.categoria.nombre} · {p.nombre} · {formatearPesos(p.precioVenta)} (quedan{' '}
-              {p.stockActual})
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="campo">
-        <span>Cantidad</span>
-        <input
-          type="number"
-          min={1}
-          max={producto?.stockActual ?? 50}
-          value={cantidad}
-          onChange={(e) => setCantidad(e.target.value)}
-          required
-        />
-      </label>
-      {producto && (
-        <p className="monto-cobro">
-          Se cargará a la habitación{' '}
-          <strong>{formatearPesos(producto.precioVenta * Number(cantidad || 0))}</strong>
-        </p>
-      )}
+
+      {lineas.map((linea, indice) => {
+        const producto = buscar(linea.productoId);
+        return (
+          <div key={indice} className="fila-consumo">
+            <select
+              value={linea.productoId}
+              onChange={(e) => actualizar(indice, 'productoId', e.target.value)}
+              aria-label="Producto"
+              required
+            >
+              <option value="">Seleccione un producto…</option>
+              {productos.map((p) => (
+                <option
+                  key={p.id}
+                  value={p.id}
+                  disabled={
+                    p.stockActual === 0 ||
+                    (elegidos.includes(String(p.id)) && String(p.id) !== linea.productoId)
+                  }
+                >
+                  {p.nombre} · {formatearPesos(p.precioVenta)} (quedan {p.stockActual})
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              min={1}
+              max={producto?.stockActual ?? 50}
+              value={linea.cantidad}
+              onChange={(e) => actualizar(indice, 'cantidad', e.target.value)}
+              aria-label="Cantidad"
+              required
+            />
+            {lineas.length > 1 ? (
+              <button
+                type="button"
+                className="boton-icono"
+                onClick={() => setLineas(lineas.filter((_, i) => i !== indice))}
+                aria-label="Quitar producto"
+              >
+                <Trash2 size={16} />
+              </button>
+            ) : (
+              <span />
+            )}
+          </div>
+        );
+      })}
+
+      <button
+        type="button"
+        className="boton boton-pequeno boton-texto"
+        onClick={() => setLineas([...lineas, LINEA_VACIA])}
+      >
+        <Plus size={14} /> Agregar otro producto
+      </button>
+
+      <p className="monto-cobro">
+        Se cargará a la habitación <strong>{formatearPesos(total)}</strong>
+      </p>
+
       <div className="acciones-modal">
         <button type="button" className="boton" onClick={onCancelar}>
           Cancelar

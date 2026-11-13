@@ -6,10 +6,12 @@ import { LoginPage } from './pages/LoginPage.jsx';
 import { CajaPage } from './pages/caja/CajaPage.jsx';
 import { ClientesPage } from './pages/clientes/ClientesPage.jsx';
 import { RackPage } from './pages/habitaciones/RackPage.jsx';
+import { InventarioPage } from './pages/inventario/InventarioPage.jsx';
 import { LimpiezaPage } from './pages/limpieza/LimpiezaPage.jsx';
 import { NuevaReservaPage } from './pages/reservas/NuevaReservaPage.jsx';
 import { ReservaDetallePage } from './pages/reservas/ReservaDetallePage.jsx';
 import { ReservasPage } from './pages/reservas/ReservasPage.jsx';
+import { TiendaPage } from './pages/tienda/TiendaPage.jsx';
 import { UsuariosPage } from './pages/usuarios/UsuariosPage.jsx';
 
 export const router = createBrowserRouter([
@@ -28,6 +30,8 @@ export const router = createBrowserRouter([
               { path: 'reservas', element: <ReservasPage /> },
               { path: 'reservas/nueva', element: <NuevaReservaPage /> },
               { path: 'reservas/:id', element: <ReservaDetallePage /> },
+              { path: 'tienda', element: <TiendaPage /> },
+              { path: 'inventario', element: <InventarioPage /> },
               { path: 'caja', element: <CajaPage /> },
               { path: 'clientes', element: <ClientesPage /> },
             ],

@@ -1096,3 +1096,233 @@ h2 {
     top: calc(100% + 8px);
   }
 }
+
+/* ─── Tienda e inventario ────────────────────────────────────── */
+
+.tienda {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.grupo-productos .subtitulo {
+  margin-top: 8px;
+}
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.producto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--gris-200);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.producto:hover:not(:disabled) {
+  border-color: var(--azul);
+}
+
+.producto:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.producto span {
+  color: var(--azul);
+  font-weight: 600;
+}
+
+.producto small {
+  color: var(--gris-500);
+}
+
+.carrito {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lineas-carrito {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lineas-carrito li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lineas-carrito li div:first-child {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+}
+
+.lineas-carrito small {
+  color: var(--gris-500);
+}
+
+.cantidad {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cantidad span {
+  min-width: 20px;
+  text-align: center;
+}
+
+.boton-ancho {
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.pestanas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--gris-200);
+}
+
+.pestanas button {
+  padding: 8px 14px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--gris-500);
+  font: inherit;
+  cursor: pointer;
+}
+
+.pestanas button.activa {
+  border-bottom-color: var(--azul);
+  color: var(--azul);
+  font-weight: 600;
+}
+
+.interruptor {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--gris-700);
+  font-size: 0.9rem;
+}
+
+.etiqueta-alerta {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.fila-inactiva td {
+  color: var(--gris-500);
+}
+
+.lineas-compra {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fila-compra {
+  display: grid;
+  grid-template-columns: 2fr 90px 120px 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+.fila-compra.encabezado {
+  color: var(--gris-500);
+  font-size: 0.8rem;
+}
+
+.fila-compra select,
+.fila-compra input {
+  padding: 8px 10px;
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio);
+  font: inherit;
+}
+
+@media (max-width: 900px) {
+  .tienda {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fila-consumo {
+  display: grid;
+  grid-template-columns: 1fr 90px 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+.fila-consumo select,
+.fila-consumo input {
+  padding: 9px 11px;
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio);
+  font: inherit;
+}
+
+.segmentos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: var(--radio);
+  background: var(--gris-100);
+}
+
+.segmentos button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--gris-700);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.segmentos button.activo {
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+  color: var(--azul);
+  font-weight: 600;
+}
+
+.opciones-nombre {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--gris-700);
+}
+
+.opciones-nombre label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
