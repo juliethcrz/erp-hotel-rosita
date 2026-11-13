@@ -1,0 +1,41 @@
+.vista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--espacio-4);
+}
+
+.principal {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: var(--espacio-4);
+  align-items: start;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--espacio-4);
+  align-items: start;
+}
+
+.totalSemana {
+  color: var(--verde-800);
+  font-size: var(--texto-lg);
+}
+
+.subtitulo {
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+}
+
+@media (max-width: 1000px) {
+  .principal {
+    grid-template-columns: 1fr;
+  }
+}
