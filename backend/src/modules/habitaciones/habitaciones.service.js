@@ -4,11 +4,15 @@ import { hoyEnColombia } from '../../shared/utils/fechas.js';
 
 export const ESTADOS_RESERVA_ACTIVOS = ['PENDIENTE', 'CONFIRMADA', 'EN_CURSO'];
 
-const TRANSICIONES_PERMITIDAS = {
-  ADMIN: () => true,
-  RECEPCIONISTA: (actual, nuevo) =>
-    ['DISPONIBLE', 'EN_LIMPIEZA'].includes(actual) && ['DISPONIBLE', 'EN_LIMPIEZA'].includes(nuevo),
-  HOUSEKEEPING: (actual, nuevo) => actual === 'EN_LIMPIEZA' && nuevo === 'DISPONIBLE',
+// Los cambios de limpieza los hacen el check-out y housekeeping; a mano solo
+// queda el mantenimiento, que lo maneja el administrador.
+const TRANSICIONES_MANUALES = {
+  ADMIN: (actual, nuevo) =>
+    (actual === 'DISPONIBLE' && nuevo === 'EN_MANTENIMIENTO') ||
+    (actual === 'EN_MANTENIMIENTO' && nuevo === 'DISPONIBLE') ||
+    (actual === 'EN_LIMPIEZA' && nuevo === 'DISPONIBLE'),
+  RECEPCIONISTA: () => false,
+  HOUSEKEEPING: () => false,
 };
 
 export async function listar() {
@@ -80,13 +84,22 @@ export async function cambiarEstado(id, nuevoEstado, rol) {
   if (habitacion.estado === 'OCUPADA' || nuevoEstado === 'OCUPADA') {
     throw new AppError('El estado Ocupada solo cambia con el check-in y el check-out');
   }
-  if (!TRANSICIONES_PERMITIDAS[rol](habitacion.estado, nuevoEstado)) {
+  if (!TRANSICIONES_MANUALES[rol](habitacion.estado, nuevoEstado)) {
     throw new AppError('Su rol no permite este cambio de estado', 403);
   }
 
-  return prisma.habitacion.update({
-    where: { id },
-    data: { estado: nuevoEstado },
-    include: { tipo: true },
+  return prisma.$transaction(async (tx) => {
+    if (habitacion.estado === 'EN_LIMPIEZA') {
+      await tx.limpieza.updateMany({
+        where: { habitacionId: id, estado: { in: ['PENDIENTE', 'EN_PROCESO'] } },
+        data: { estado: 'TERMINADA', terminadaEn: new Date() },
+      });
+    }
+
+    return tx.habitacion.update({
+      where: { id },
+      data: { estado: nuevoEstado },
+      include: { tipo: true },
+    });
   });
 }
