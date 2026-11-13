@@ -41,15 +41,16 @@ export function renovarSesion() {
 }
 
 async function solicitar(ruta, { method = 'GET', body, reintentar = true } = {}) {
+  const esFormulario = body instanceof FormData;
   const headers = {};
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  if (body !== undefined && !esFormulario) headers['Content-Type'] = 'application/json';
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
   const respuesta = await fetch(`${BASE_URL}${ruta}`, {
     method,
     headers,
     credentials: 'include',
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined || esFormulario ? body : JSON.stringify(body),
   });
 
   if (respuesta.status === 401 && reintentar && !ruta.startsWith('/auth/')) {
