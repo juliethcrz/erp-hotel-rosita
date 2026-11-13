@@ -13,7 +13,7 @@ export async function obtenerCajaAbierta(tx = prisma) {
   return caja;
 }
 
-function resumir(caja) {
+export function resumir(caja) {
   const porMetodo = Object.fromEntries(METODOS.map((metodo) => [metodo, 0]));
   let ingresos = 0;
   let egresos = 0;
