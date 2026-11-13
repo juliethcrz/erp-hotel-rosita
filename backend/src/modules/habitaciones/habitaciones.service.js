@@ -4,6 +4,25 @@ import { hoyEnColombia } from '../../shared/utils/fechas.js';
 
 export const ESTADOS_RESERVA_ACTIVOS = ['PENDIENTE', 'CONFIRMADA', 'EN_CURSO'];
 
+// Datos de la ficha que acompañan a cada habitación en el rack y en las reservas.
+const FICHA = {
+  tipo: true,
+  camas: { orderBy: { tipo: 'asc' } },
+  caracteristicas: {
+    select: { caracteristica: true },
+    orderBy: { caracteristica: { nombre: 'asc' } },
+  },
+  fotos: { orderBy: [{ esPrincipal: 'desc' }, { orden: 'asc' }] },
+};
+
+/** Aplana las relaciones de la ficha para que el cliente las reciba listas para mostrar. */
+function conFicha({ caracteristicas, ...habitacion }) {
+  return {
+    ...habitacion,
+    caracteristicas: caracteristicas.map(({ caracteristica }) => caracteristica),
+  };
+}
+
 // Los cambios de limpieza los hacen el check-out y housekeeping; a mano solo
 // queda el mantenimiento, que lo maneja el administrador.
 const TRANSICIONES_MANUALES = {
@@ -22,7 +41,7 @@ export async function listar() {
     where: { activa: true },
     orderBy: { numero: 'asc' },
     include: {
-      tipo: true,
+      ...FICHA,
       reservas: {
         where: {
           reserva: {
@@ -40,12 +59,12 @@ export async function listar() {
     const reservaHoy = reservas[0]?.reserva ?? null;
     const estadoRack =
       habitacion.estado === 'DISPONIBLE' && reservaHoy ? 'RESERVADA' : habitacion.estado;
-    return { ...habitacion, estadoRack, reservaHoy };
+    return { ...conFicha(habitacion), estadoRack, reservaHoy };
   });
 }
 
-export function disponibles({ llegada, salida }) {
-  return prisma.habitacion.findMany({
+export async function disponibles({ llegada, salida }) {
+  const habitaciones = await prisma.habitacion.findMany({
     where: {
       activa: true,
       estado: { not: 'EN_MANTENIMIENTO' },
@@ -59,9 +78,10 @@ export function disponibles({ llegada, salida }) {
         },
       },
     },
-    include: { tipo: true },
+    include: FICHA,
     orderBy: { numero: 'asc' },
   });
+  return habitaciones.map(conFicha);
 }
 
 export function crear(datos) {

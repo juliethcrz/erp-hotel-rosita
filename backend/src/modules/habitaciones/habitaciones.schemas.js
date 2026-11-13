@@ -7,7 +7,8 @@ export const crearHabitacionSchema = z.object({
   numero: z.string().trim().min(1).max(10),
   piso: z.number().int().min(1),
   tipoId: z.number().int().positive(),
-  descripcion: z.string().trim().max(300).optional().nullable(),
+  nombre: z.string().trim().max(60).optional().nullable(),
+  descripcion: z.string().trim().max(500).optional().nullable(),
 });
 
 export const actualizarHabitacionSchema = crearHabitacionSchema

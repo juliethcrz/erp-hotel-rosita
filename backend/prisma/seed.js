@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../src/config/database.js';
+import { CARACTERISTICAS, CARACTERISTICAS_COMUNES, HABITACIONES } from './habitaciones.datos.js';
 
 const TIPOS_HABITACION = [
   { nombre: 'Individual', capacidadMaxima: 1, tarifaBase: 45000, descripcion: 'Para una persona' },
@@ -16,16 +17,6 @@ const TIPOS_HABITACION = [
     tarifaBase: 120000,
     descripcion: 'Familiar, para cuatro personas',
   },
-];
-
-const HABITACIONES = [
-  ...['101', '102', '103', '104', '105', '106'].map((numero) => ({ numero, tipo: 'Individual' })),
-  ...['107', '108', '109', '110', '201', '202', '203', '204'].map((numero) => ({
-    numero,
-    tipo: 'Doble',
-  })),
-  ...['205', '206', '207'].map((numero) => ({ numero, tipo: 'Triple' })),
-  ...['208', '209', '210'].map((numero) => ({ numero, tipo: 'Cuádruple' })),
 ];
 
 const INCREMENTO_TEMPORADA_ALTA = 0.3;
@@ -125,11 +116,38 @@ async function sembrarHabitaciones() {
   const tipos = await prisma.tipoHabitacion.findMany();
   const idPorNombre = Object.fromEntries(tipos.map((tipo) => [tipo.nombre, tipo.id]));
 
-  for (const { numero, tipo } of HABITACIONES) {
-    await prisma.habitacion.upsert({
+  for (const caracteristica of CARACTERISTICAS) {
+    await prisma.caracteristica.upsert({
+      where: { nombre: caracteristica.nombre },
+      update: { categoria: caracteristica.categoria },
+      create: caracteristica,
+    });
+  }
+  const idCaracteristica = Object.fromEntries(
+    (await prisma.caracteristica.findMany()).map((c) => [c.nombre, c.id]),
+  );
+
+  // La ficha (nombre, descripción, camas y comodidades) se vuelve a cargar
+  // completa cada vez, para que el seed refleje siempre el archivo de datos.
+  for (const { numero, tipo, nombre, descripcion, camas, caracteristicas } of HABITACIONES) {
+    const ficha = { nombre, descripcion };
+    const habitacion = await prisma.habitacion.upsert({
       where: { numero },
-      update: {},
-      create: { numero, piso: Number(numero[0]), tipoId: idPorNombre[tipo] },
+      update: ficha,
+      create: { numero, piso: Number(numero[0]), tipoId: idPorNombre[tipo], ...ficha },
+    });
+
+    await prisma.camaHabitacion.deleteMany({ where: { habitacionId: habitacion.id } });
+    await prisma.camaHabitacion.createMany({
+      data: camas.map((cama) => ({ ...cama, habitacionId: habitacion.id })),
+    });
+
+    await prisma.habitacionCaracteristica.deleteMany({ where: { habitacionId: habitacion.id } });
+    await prisma.habitacionCaracteristica.createMany({
+      data: [...CARACTERISTICAS_COMUNES, ...caracteristicas].map((nombreCaracteristica) => ({
+        habitacionId: habitacion.id,
+        caracteristicaId: idCaracteristica[nombreCaracteristica],
+      })),
     });
   }
 

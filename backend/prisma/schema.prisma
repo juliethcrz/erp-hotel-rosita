@@ -92,6 +92,22 @@ enum EstadoLimpieza {
   TERMINADA
 }
 
+enum TipoCama {
+  SENCILLA
+  SEMIDOBLE
+  DOBLE
+  QUEEN
+  CAMAROTE
+}
+
+enum CategoriaCaracteristica {
+  VISTA
+  BANO
+  TECNOLOGIA
+  MOBILIARIO
+  COMODIDAD
+}
+
 // ─── Acceso ────────────────────────────────────────────────────
 
 model Usuario {
@@ -177,18 +193,70 @@ model Habitacion {
   numero      String           @unique @db.VarChar(10)
   piso        Int
   tipoId      Int              @map("tipo_id")
+  nombre      String?          @db.VarChar(60)
   estado      EstadoHabitacion @default(DISPONIBLE)
   descripcion String?
   activa      Boolean          @default(true)
 
-  tipo           TipoHabitacion      @relation(fields: [tipoId], references: [id])
-  reservas       ReservaHabitacion[]
-  huespedes      ReservaHuesped[]
-  limpiezas      Limpieza[]
-  notificaciones Notificacion[]
+  tipo            TipoHabitacion             @relation(fields: [tipoId], references: [id])
+  camas           CamaHabitacion[]
+  caracteristicas HabitacionCaracteristica[]
+  fotos           FotoHabitacion[]
+  reservas        ReservaHabitacion[]
+  huespedes       ReservaHuesped[]
+  limpiezas       Limpieza[]
+  notificaciones  Notificacion[]
 
   @@index([tipoId])
   @@map("habitaciones")
+}
+
+model CamaHabitacion {
+  id           Int      @id @default(autoincrement())
+  habitacionId Int      @map("habitacion_id")
+  tipo         TipoCama
+  cantidad     Int      @default(1)
+
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id], onDelete: Cascade)
+
+  @@unique([habitacionId, tipo])
+  @@map("camas_habitacion")
+}
+
+model Caracteristica {
+  id        Int                     @id @default(autoincrement())
+  nombre    String                  @unique @db.VarChar(60)
+  categoria CategoriaCaracteristica
+
+  habitaciones HabitacionCaracteristica[]
+
+  @@map("caracteristicas")
+}
+
+model HabitacionCaracteristica {
+  habitacionId     Int @map("habitacion_id")
+  caracteristicaId Int @map("caracteristica_id")
+
+  habitacion     Habitacion     @relation(fields: [habitacionId], references: [id], onDelete: Cascade)
+  caracteristica Caracteristica @relation(fields: [caracteristicaId], references: [id], onDelete: Cascade)
+
+  @@id([habitacionId, caracteristicaId])
+  @@index([caracteristicaId])
+  @@map("habitacion_caracteristicas")
+}
+
+model FotoHabitacion {
+  id           Int      @id @default(autoincrement())
+  habitacionId Int      @map("habitacion_id")
+  ruta         String   @db.VarChar(255)
+  orden        Int      @default(0)
+  esPrincipal  Boolean  @default(false) @map("es_principal")
+  creadoEn     DateTime @default(now()) @map("creado_en")
+
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id], onDelete: Cascade)
+
+  @@index([habitacionId])
+  @@map("fotos_habitacion")
 }
 
 model Temporada {
