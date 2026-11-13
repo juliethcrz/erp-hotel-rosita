@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
-export const idParamSchema = z.object({
-  id: z.coerce.number().int().positive(),
-});
+const idSchema = z.coerce.number().int().positive();
+
+export const idParamSchema = z.object({ id: idSchema });
+
+export const fotoParamsSchema = idParamSchema.extend({ fotoId: idSchema });
 
 export const fechaSchema = z
   .string()

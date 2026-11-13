@@ -8,6 +8,9 @@ const esquema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   REFRESH_TOKEN_TTL_HOURS: z.coerce.number().positive().default(8),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  SUPABASE_URL: z.url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  SUPABASE_BUCKET: z.string().default('habitaciones'),
 });
 
 const resultado = esquema.safeParse(process.env);
@@ -33,4 +36,9 @@ export const env = {
   },
   refreshTokenTtlHours: variables.REFRESH_TOKEN_TTL_HOURS,
   corsOrigin: variables.CORS_ORIGIN,
+  supabase: {
+    url: variables.SUPABASE_URL,
+    serviceRoleKey: variables.SUPABASE_SERVICE_ROLE_KEY,
+    bucket: variables.SUPABASE_BUCKET,
+  },
 };

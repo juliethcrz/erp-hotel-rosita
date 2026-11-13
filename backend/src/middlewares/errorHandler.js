@@ -4,7 +4,19 @@ const ERRORES_PRISMA = {
   P2025: { statusCode: 404, message: 'El registro no existe' },
 };
 
+const ERRORES_ARCHIVO = {
+  LIMIT_FILE_SIZE: 'Cada foto puede pesar máximo 5 MB',
+  LIMIT_FILE_COUNT: 'Se pueden subir máximo 10 fotos a la vez',
+  LIMIT_UNEXPECTED_FILE: 'Se pueden subir máximo 10 fotos a la vez',
+};
+
 export function errorHandler(err, req, res, _next) {
+  if (err.name === 'MulterError') {
+    return res.status(400).json({
+      error: { message: ERRORES_ARCHIVO[err.code] ?? 'No se pudo recibir el archivo' },
+    });
+  }
+
   const errorPrisma = ERRORES_PRISMA[err.code];
   const statusCode = errorPrisma?.statusCode ?? err.statusCode ?? 500;
 

@@ -1,6 +1,7 @@
 import { prisma } from '../../config/database.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import { hoyEnColombia } from '../../shared/utils/fechas.js';
+import { conUrl } from './fotos.service.js';
 
 export const ESTADOS_RESERVA_ACTIVOS = ['PENDIENTE', 'CONFIRMADA', 'EN_CURSO'];
 
@@ -12,14 +13,18 @@ const FICHA = {
     select: { caracteristica: true },
     orderBy: { caracteristica: { nombre: 'asc' } },
   },
-  fotos: { orderBy: [{ esPrincipal: 'desc' }, { orden: 'asc' }] },
+  fotos: { orderBy: { orden: 'asc' } },
 };
 
 /** Aplana las relaciones de la ficha para que el cliente las reciba listas para mostrar. */
-function conFicha({ caracteristicas, ...habitacion }) {
+function conFicha({ caracteristicas, fotos, ...habitacion }) {
+  const fotosConUrl = fotos.map(conUrl);
+  const principal = fotosConUrl.find((foto) => foto.esPrincipal) ?? fotosConUrl[0];
   return {
     ...habitacion,
     caracteristicas: caracteristicas.map(({ caracteristica }) => caracteristica),
+    fotos: fotosConUrl,
+    fotoPrincipal: principal?.url ?? null,
   };
 }
 
