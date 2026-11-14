@@ -11,7 +11,9 @@
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force",
     "db:seed": "prisma db seed",
+    "db:demo": "node --env-file=.env scripts/datosDemo.js",
     "fotos:importar": "node --env-file=.env scripts/importarFotos.js"
   },
   "dependencies": {

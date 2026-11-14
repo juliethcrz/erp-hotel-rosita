@@ -32,7 +32,7 @@ export async function borrarArchivos(rutas) {
 }
 
 /** Archivos sueltos de una carpeta del bucket (sin entrar a subcarpetas). */
-export async function listarArchivos(carpeta = '') {
+async function listar(carpeta) {
   const { data, error } = await almacen().list(carpeta, {
     limit: 1000,
     sortBy: { column: 'name', order: 'asc' },
@@ -40,8 +40,16 @@ export async function listarArchivos(carpeta = '') {
   if (error) {
     throw new AppError(`No se pudo leer el almacenamiento: ${error.message}`, 502);
   }
-  // Las carpetas vienen sin id; solo interesan los archivos.
-  return data.filter((elemento) => elemento.id !== null).map((archivo) => archivo.name);
+  return data;
+}
+
+/** Archivos sueltos de una carpeta del bucket. Las carpetas vienen sin id. */
+export async function listarArchivos(carpeta = '') {
+  return (await listar(carpeta)).filter((e) => e.id !== null).map((e) => e.name);
+}
+
+export async function listarCarpetas(carpeta = '') {
+  return (await listar(carpeta)).filter((e) => e.id === null).map((e) => e.name);
 }
 
 export async function moverArchivo(origen, destino) {
