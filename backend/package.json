@@ -8,6 +8,8 @@
     "dev": "node --env-file=.env --watch src/server.js",
     "start": "node src/server.js",
     "lint": "eslint .",
+    "test": "node --env-file=.env.test --test --test-concurrency=1 \"test/*.test.js\"",
+    "test:preparar": "node --env-file=.env.test test/migrarBase.js",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
@@ -38,6 +40,7 @@
     "dotenv": "^18.0.10",
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
-    "prisma": "^7.10.1"
+    "prisma": "^7.10.1",
+    "supertest": "^7.3.2"
   }
 }
