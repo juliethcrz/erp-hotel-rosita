@@ -6,6 +6,8 @@
     "frontend"
   ],
   "scripts": {
+    "build": "npm run build --workspace frontend",
+    "start": "npm start --workspace backend",
     "dev:api": "npm run dev --workspace backend",
     "dev:web": "npm run dev --workspace frontend",
     "lint": "npm run lint --workspaces --if-present",
@@ -14,5 +16,11 @@
   },
   "devDependencies": {
     "prettier": "^3.10.1"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }

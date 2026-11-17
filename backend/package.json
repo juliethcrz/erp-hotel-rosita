@@ -11,12 +11,16 @@
     "test": "node --env-file=.env.test --test --test-concurrency=1 \"test/*.test.js\"",
     "test:preparar": "node --env-file=.env.test test/migrarBase.js",
     "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force",
     "db:seed": "prisma db seed",
     "db:demo": "node --env-file=.env scripts/datosDemo.js",
-    "fotos:importar": "node --env-file=.env scripts/importarFotos.js"
+    "fotos:importar": "node --env-file=.env scripts/importarFotos.js",
+    "prod:seed": "node --env-file=.env.produccion prisma/seed.js",
+    "prod:fotos": "node --env-file=.env.produccion scripts/importarFotos.js",
+    "prod:demo": "node --env-file=.env.produccion scripts/datosDemo.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
@@ -40,7 +44,6 @@
     "dotenv": "^18.0.10",
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
-    "prisma": "^7.10.1",
-    "supertest": "^7.3.2"
+    "prisma": "^7.10.1"
   }
 }

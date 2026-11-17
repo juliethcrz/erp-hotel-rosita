@@ -13,7 +13,28 @@ const esquema = z.object({
   SUPABASE_BUCKET: z.string().default('habitaciones'),
 });
 
-const resultado = esquema.safeParse(process.env);
+const CLAVE_DE_EJEMPLO = 'cambia-esto-por-una-clave-larga-y-aleatoria-de-64-caracteres';
+
+// En producción no se aceptan valores de ejemplo ni orígenes sin HTTPS.
+const esquemaProduccion = esquema.superRefine((variables, contexto) => {
+  if (variables.NODE_ENV !== 'production') return;
+  if (variables.JWT_ACCESS_SECRET === CLAVE_DE_EJEMPLO || variables.JWT_ACCESS_SECRET.length < 40) {
+    contexto.addIssue({
+      code: 'custom',
+      path: ['JWT_ACCESS_SECRET'],
+      message: 'en producción debe ser una clave aleatoria propia de al menos 40 caracteres',
+    });
+  }
+  if (!variables.CORS_ORIGIN.startsWith('https://')) {
+    contexto.addIssue({
+      code: 'custom',
+      path: ['CORS_ORIGIN'],
+      message: 'en producción debe ser la dirección pública con https://',
+    });
+  }
+});
+
+const resultado = esquemaProduccion.safeParse(process.env);
 
 if (!resultado.success) {
   const detalle = resultado.error.issues

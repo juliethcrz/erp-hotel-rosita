@@ -7,7 +7,8 @@ function opcionesCookie() {
   return {
     httpOnly: true,
     secure: env.isProduction,
-    sameSite: env.isProduction ? 'none' : 'lax',
+    // La web y la API comparten dirección: la cookie nunca necesita viajar a otro sitio.
+    sameSite: 'strict',
     path: '/api/auth',
   };
 }
