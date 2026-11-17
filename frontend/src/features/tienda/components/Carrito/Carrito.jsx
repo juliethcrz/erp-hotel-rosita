@@ -12,14 +12,14 @@ const OPCIONES_COMPRADOR = [
  * Resumen de la venta en curso y elección de quién compra. La decisión de qué
  * hacer al confirmar la toma la página a través de `onCobrar` y `onCargar`.
  */
-export function Carrito({ carrito, comprador, hospedadas, procesando, onCobrar, onCargar }) {
+export function Carrito({ id, carrito, comprador, hospedadas, procesando, onCobrar, onCargar }) {
   const { lineas, total, cambiarCantidad } = carrito;
   const { tipo, setTipo, reservaId, setReservaId, conNombre, setConNombre, nombre, setNombre } =
     comprador;
   const vacio = lineas.length === 0;
 
   return (
-    <aside className={estilos.carrito}>
+    <aside id={id} className={estilos.carrito}>
       <header className={estilos.encabezado}>
         <ShoppingBag size={18} aria-hidden="true" />
         <h2>Venta actual</h2>

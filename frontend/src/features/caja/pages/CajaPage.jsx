@@ -35,8 +35,18 @@ const COLUMNAS_MOVIMIENTOS = [
 ];
 
 const COLUMNAS_HISTORIAL = [
-  { clave: 'apertura', titulo: 'Apertura', render: (c) => formatearFechaHora(c.abiertaEn) },
-  { clave: 'cierre', titulo: 'Cierre', render: (c) => formatearFechaHora(c.cerradaEn) },
+  {
+    clave: 'apertura',
+    titulo: 'Apertura',
+    sinCorte: true,
+    render: (c) => formatearFechaHora(c.abiertaEn),
+  },
+  {
+    clave: 'cierre',
+    titulo: 'Cierre',
+    sinCorte: true,
+    render: (c) => formatearFechaHora(c.cerradaEn),
+  },
   { clave: 'cerro', titulo: 'Cerró', render: (c) => c.cerradaPor?.nombre },
   {
     clave: 'ingresos',

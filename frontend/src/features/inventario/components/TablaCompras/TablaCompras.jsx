@@ -3,7 +3,12 @@ import { formatearFechaHora, formatearPesos } from '../../../../lib/formato.js';
 
 const COLUMNAS = [
   { clave: 'id', titulo: 'N.º' },
-  { clave: 'fecha', titulo: 'Fecha', render: (c) => formatearFechaHora(c.creadoEn) },
+  {
+    clave: 'fecha',
+    titulo: 'Fecha',
+    sinCorte: true,
+    render: (c) => formatearFechaHora(c.creadoEn),
+  },
   { clave: 'proveedor', titulo: 'Proveedor', render: (c) => c.proveedor.nombre },
   {
     clave: 'productos',

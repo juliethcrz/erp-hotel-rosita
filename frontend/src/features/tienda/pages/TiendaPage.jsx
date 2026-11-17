@@ -4,10 +4,13 @@ import { Alerta, AlertaError, EncabezadoPagina, Modal } from '../../../component
 import { comprobante } from '../../../lib/formato.js';
 import { inventarioApi } from '../../inventario/api/inventarioApi.js';
 import { tiendaApi } from '../api/tiendaApi.js';
+import { BarraVentaMovil } from '../components/BarraVentaMovil/BarraVentaMovil.jsx';
 import { Carrito } from '../components/Carrito/Carrito.jsx';
 import { CatalogoProductos } from '../components/CatalogoProductos/CatalogoProductos.jsx';
 import { useCarrito } from '../hooks/useCarrito.js';
 import estilos from './TiendaPage.module.css';
+
+const ID_CARRITO = 'venta-actual';
 
 export function TiendaPage() {
   const carrito = useCarrito();
@@ -83,6 +86,7 @@ export function TiendaPage() {
           }}
         />
         <Carrito
+          id={ID_CARRITO}
           carrito={carrito}
           hospedadas={hospedadas}
           procesando={procesando}
@@ -100,6 +104,12 @@ export function TiendaPage() {
           onCargar={cargar}
         />
       </div>
+
+      <BarraVentaMovil
+        unidades={carrito.lineas.reduce((suma, linea) => suma + linea.cantidad, 0)}
+        total={carrito.total}
+        idCarrito={ID_CARRITO}
+      />
 
       {cobrando && (
         <Modal titulo="Cobrar venta" onCerrar={() => setCobrando(false)}>

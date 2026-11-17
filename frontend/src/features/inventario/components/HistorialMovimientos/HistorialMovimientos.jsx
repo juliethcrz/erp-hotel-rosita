@@ -12,7 +12,12 @@ const MOTIVOS = {
 };
 
 const COLUMNAS = [
-  { clave: 'fecha', titulo: 'Fecha', render: (m) => formatearFechaHora(m.creadoEn) },
+  {
+    clave: 'fecha',
+    titulo: 'Fecha',
+    sinCorte: true,
+    render: (m) => formatearFechaHora(m.creadoEn),
+  },
   { clave: 'motivo', titulo: 'Motivo', render: (m) => MOTIVOS[m.motivo] },
   {
     clave: 'cantidad',

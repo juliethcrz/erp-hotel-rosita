@@ -1,15 +1,14 @@
 import { Banknote, Receipt, ShoppingBag, Wallet } from 'lucide-react';
 import { Cifra, Tabla, Tarjeta } from '../../../../components/ui/index.js';
-import { TIPOS_COBRO } from '../../../../constants/catalogos.js';
+import { METODOS_PAGO, TIPOS_COBRO } from '../../../../constants/catalogos.js';
 import { comprobante, formatearFechaHora, formatearPesos } from '../../../../lib/formato.js';
-import { NOMBRES_METODO } from '../../utils/periodos.js';
 import { GraficoBarras } from '../GraficoBarras/GraficoBarras.jsx';
 import { TablaReparto } from '../TablaReparto/TablaReparto.jsx';
 import estilos from '../reportes.module.css';
 
 const COLUMNAS = [
   { clave: 'id', titulo: 'Comprobante', render: (v) => comprobante(v.id) },
-  { clave: 'fecha', titulo: 'Fecha', render: (v) => formatearFechaHora(v.fecha) },
+  { clave: 'fecha', titulo: 'Fecha', sinCorte: true, render: (v) => formatearFechaHora(v.fecha) },
   {
     clave: 'concepto',
     titulo: 'Concepto',
@@ -19,7 +18,7 @@ const COLUMNAS = [
   {
     clave: 'metodos',
     titulo: 'Pago',
-    render: (v) => v.metodos.map((m) => NOMBRES_METODO[m]).join(' + '),
+    render: (v) => v.metodos.map((m) => METODOS_PAGO[m]).join(' + '),
   },
   { clave: 'total', titulo: 'Total', numero: true, render: (v) => formatearPesos(v.total) },
 ];
@@ -67,7 +66,7 @@ export function ReporteIngresos({ datos }) {
         <Tarjeta titulo="Por método de pago">
           <TablaReparto
             filas={Object.entries(porMetodo).map(([metodo, valor]) => ({
-              etiqueta: NOMBRES_METODO[metodo],
+              etiqueta: METODOS_PAGO[metodo],
               valor,
             }))}
             formatear={formatearPesos}

@@ -1,6 +1,9 @@
 .pestanas {
   display: inline-flex;
+  max-width: 100%;
   gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
   margin-bottom: var(--espacio-4);
   padding: 4px;
   border-radius: var(--radio-pildora);
@@ -21,6 +24,8 @@
   background: none;
   color: var(--verde-800);
   font-size: var(--texto-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
   transition:
     background var(--transicion),

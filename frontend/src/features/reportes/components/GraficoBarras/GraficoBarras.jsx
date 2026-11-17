@@ -1,11 +1,13 @@
 import estilos from './GraficoBarras.module.css';
 
-const corta = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const dia = new Intl.DateTimeFormat('es-CO', { day: 'numeric', timeZone: 'UTC' });
+const mes = new Intl.DateTimeFormat('es-CO', { month: 'short', timeZone: 'UTC' });
+const corta = { format: (fecha) => `${dia.format(fecha)} ${mes.format(fecha).replace('.', '')}` };
 
 /** Barras verticales por día; el valor exacto aparece al pasar el cursor. */
 export function GraficoBarras({ datos, formatear, maximo }) {
   const tope = maximo ?? Math.max(...datos.map((d) => d.valor), 1);
-  const cadaCuanto = Math.ceil(datos.length / 10);
+  const cadaCuanto = Math.ceil(datos.length / 7);
 
   return (
     <div className={estilos.contenedor}>

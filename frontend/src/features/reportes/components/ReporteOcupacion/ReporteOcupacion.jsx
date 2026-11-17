@@ -1,7 +1,6 @@
 import { BedDouble, CalendarCheck, Moon, TrendingUp } from 'lucide-react';
 import { Cifra, Tabla, Tarjeta } from '../../../../components/ui/index.js';
-import { formatearPesos } from '../../../../lib/formato.js';
-import { porcentaje } from '../../utils/periodos.js';
+import { formatearPesos, formatearPorcentaje } from '../../../../lib/formato.js';
 import { GraficoBarras } from '../GraficoBarras/GraficoBarras.jsx';
 import estilos from '../reportes.module.css';
 
@@ -9,7 +8,12 @@ const COLUMNAS = [
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'habitaciones', titulo: 'Habitaciones', numero: true },
   { clave: 'noches', titulo: 'Noches vendidas', numero: true },
-  { clave: 'ocupacion', titulo: 'Ocupación', numero: true, render: (t) => porcentaje(t.ocupacion) },
+  {
+    clave: 'ocupacion',
+    titulo: 'Ocupación',
+    numero: true,
+    render: (t) => formatearPorcentaje(t.ocupacion),
+  },
   {
     clave: 'ingreso',
     titulo: 'Ingreso estimado',
@@ -26,7 +30,7 @@ export function ReporteOcupacion({ datos }) {
       <div className={estilos.cifras}>
         <Cifra
           etiqueta="Ocupación"
-          valor={porcentaje(totales.ocupacion)}
+          valor={formatearPorcentaje(totales.ocupacion)}
           detalle={`${totales.nochesVendidas} de ${totales.nochesDisponibles} noches`}
           icono={BedDouble}
           destacada
@@ -54,7 +58,7 @@ export function ReporteOcupacion({ datos }) {
       <Tarjeta titulo="Ocupación por día">
         <GraficoBarras
           datos={datos.porDia.map((d) => ({ fecha: d.fecha, valor: d.ocupacion }))}
-          formatear={porcentaje}
+          formatear={formatearPorcentaje}
           maximo={100}
         />
       </Tarjeta>

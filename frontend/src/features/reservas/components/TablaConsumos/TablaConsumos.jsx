@@ -2,7 +2,12 @@ import { Insignia, Tabla } from '../../../../components/ui/index.js';
 import { formatearFechaHora, formatearPesos } from '../../../../lib/formato.js';
 
 const COLUMNAS = [
-  { clave: 'fecha', titulo: 'Fecha', render: (c) => formatearFechaHora(c.creadoEn) },
+  {
+    clave: 'fecha',
+    titulo: 'Fecha',
+    sinCorte: true,
+    render: (c) => formatearFechaHora(c.creadoEn),
+  },
   { clave: 'producto', titulo: 'Producto', render: (c) => c.producto.nombre },
   { clave: 'cantidad', titulo: 'Cantidad', numero: true },
   {

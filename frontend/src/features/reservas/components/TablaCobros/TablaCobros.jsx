@@ -5,7 +5,12 @@ import estilos from './TablaCobros.module.css';
 
 const COLUMNAS = [
   { clave: 'comprobante', titulo: 'Comprobante', render: (v) => comprobante(v.id) },
-  { clave: 'fecha', titulo: 'Fecha', render: (v) => formatearFechaHora(v.creadoEn) },
+  {
+    clave: 'fecha',
+    titulo: 'Fecha',
+    sinCorte: true,
+    render: (v) => formatearFechaHora(v.creadoEn),
+  },
   {
     clave: 'concepto',
     titulo: 'Concepto',

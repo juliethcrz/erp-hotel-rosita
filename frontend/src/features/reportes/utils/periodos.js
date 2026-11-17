@@ -1,38 +1,28 @@
-import { hoyLocal } from '../../../lib/formato.js';
+import { hoyLocal, sumarDias } from '../../../lib/formato.js';
 
-const aTexto = (fecha) => fecha.toLocaleDateString('en-CA');
-
-function desplazar(dias) {
-  const fecha = new Date();
-  fecha.setDate(fecha.getDate() + dias);
-  return aTexto(fecha);
+function inicioDeMes(fecha) {
+  return `${fecha.slice(0, 7)}-01`;
 }
 
-/** Atajos de periodo, calculados con la fecha local del equipo. */
+/** Atajos de periodo, calculados con la fecha de hoy en Colombia. */
 export const PERIODOS_RAPIDOS = [
   { clave: 'hoy', etiqueta: 'Hoy', calcular: () => ({ desde: hoyLocal(), hasta: hoyLocal() }) },
   {
     clave: 'semana',
     etiqueta: 'Últimos 7 días',
-    calcular: () => ({ desde: desplazar(-6), hasta: hoyLocal() }),
+    calcular: () => ({ desde: sumarDias(hoyLocal(), -6), hasta: hoyLocal() }),
   },
   {
     clave: 'mes',
     etiqueta: 'Este mes',
-    calcular: () => {
-      const hoy = new Date();
-      return { desde: aTexto(new Date(hoy.getFullYear(), hoy.getMonth(), 1)), hasta: hoyLocal() };
-    },
+    calcular: () => ({ desde: inicioDeMes(hoyLocal()), hasta: hoyLocal() }),
   },
   {
     clave: 'mesAnterior',
     etiqueta: 'Mes anterior',
     calcular: () => {
-      const hoy = new Date();
-      return {
-        desde: aTexto(new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1)),
-        hasta: aTexto(new Date(hoy.getFullYear(), hoy.getMonth(), 0)),
-      };
+      const finMesAnterior = sumarDias(inicioDeMes(hoyLocal()), -1);
+      return { desde: inicioDeMes(finMesAnterior), hasta: finMesAnterior };
     },
   },
 ];
@@ -46,13 +36,3 @@ export function guardarArchivo(contenido, nombre) {
   enlace.click();
   URL.revokeObjectURL(url);
 }
-
-export const NOMBRES_METODO = {
-  EFECTIVO: 'Efectivo',
-  NEQUI: 'Nequi',
-  DAVIPLATA: 'Daviplata',
-  BANCOLOMBIA: 'Bancolombia',
-  TRANSFERENCIA: 'Transferencia',
-};
-
-export const porcentaje = (valor) => `${valor.toLocaleString('es-CO')} %`;

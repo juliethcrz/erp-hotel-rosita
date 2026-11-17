@@ -1,13 +1,18 @@
 import { ArrowDownCircle, ArrowUpCircle, Scale, Wallet } from 'lucide-react';
 import { Cifra, Insignia, Tabla, Tarjeta } from '../../../../components/ui/index.js';
+import { METODOS_PAGO } from '../../../../constants/catalogos.js';
 import { formatearFechaHora, formatearPesos } from '../../../../lib/formato.js';
-import { NOMBRES_METODO } from '../../utils/periodos.js';
 import { TablaReparto } from '../TablaReparto/TablaReparto.jsx';
 import estilos from '../reportes.module.css';
 
 const COLUMNAS = [
   { clave: 'id', titulo: 'Turno' },
-  { clave: 'abiertaEn', titulo: 'Apertura', render: (c) => formatearFechaHora(c.abiertaEn) },
+  {
+    clave: 'abiertaEn',
+    titulo: 'Apertura',
+    sinCorte: true,
+    render: (c) => formatearFechaHora(c.abiertaEn),
+  },
   {
     clave: 'cerradaEn',
     titulo: 'Cierre',
@@ -60,7 +65,7 @@ export function ReporteCaja({ datos }) {
         <Tarjeta titulo="Neto por método de pago">
           <TablaReparto
             filas={Object.entries(porMetodo).map(([metodo, valor]) => ({
-              etiqueta: NOMBRES_METODO[metodo],
+              etiqueta: METODOS_PAGO[metodo],
               valor,
             }))}
             formatear={formatearPesos}
