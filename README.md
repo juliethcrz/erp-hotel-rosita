@@ -174,6 +174,45 @@ Todas las rutas parten de `/api` y, salvo el inicio de sesión, requieren el enc
 
 Los errores responden con `{ "error": { "message", "details" } }` y el código HTTP correspondiente (400 datos inválidos, 401 sin sesión, 403 sin permiso, 404 no existe, 409 conflicto con una regla del negocio).
 
+## Seguridad
+
+| Riesgo               | Medida                                                                                                                                                     |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Robo de contraseñas  | Hash con bcrypt; los usuarios iniciales no aceptan claves débiles en producción                                                                            |
+| Robo de sesión       | Token de acceso de 15 minutos solo en memoria; refresh token en cookie `httpOnly`, `Secure` y `SameSite=Strict`, rotativo y con detección de reutilización |
+| Fuerza bruta         | 10 intentos de inicio de sesión cada 15 minutos por IP y límite general de solicitudes a la API                                                            |
+| Acceso indebido      | Autenticación y rol revisados en cada ruta del backend; la interfaz solo oculta, no protege                                                                |
+| Datos maliciosos     | Validación con Zod de cuerpo, parámetros y consulta; Prisma parametriza todas las consultas                                                                |
+| Inyección de scripts | React escapa el contenido y la API envía una política de contenido (CSP) que solo permite recursos propios y las fotos del almacenamiento                  |
+| Archivos             | Solo imágenes JPG, PNG o WebP de máximo 5 MB, subidas por el administrador a través de la API                                                              |
+| Secretos             | Variables de entorno validadas al arrancar; en producción se rechazan claves de ejemplo y orígenes sin HTTPS. Ningún secreto vive en el repositorio        |
+| Errores              | Los errores internos responden un mensaje genérico, sin detalles del servidor                                                                              |
+
+## Despliegue
+
+En producción un solo servicio compila la interfaz y la entrega desde la misma dirección que la API. Así la cookie de sesión nunca sale del dominio.
+
+```
+Navegador ──► Render (web + API, HTTPS)
+                 ├──► Supabase PostgreSQL
+                 └──► Supabase Storage (fotos)
+```
+
+El archivo [`render.yaml`](render.yaml) describe el servicio. En cada cambio a la rama `main`, Render instala las dependencias, genera el cliente de Prisma, aplica las migraciones pendientes, compila la interfaz y arranca la API. El estado del servicio se vigila con `/api/health`.
+
+1. **Base de datos.** En Supabase, copie la cadena de conexión _Session pooler_ (Connect → Session pooler). En _Project Settings → Data API_, desactive la API de datos o quite el esquema `public` de los esquemas expuestos: el sistema accede a la base solo a través de su propia API.
+2. **Servicio.** En Render, cree un _Blueprint_ desde este repositorio y complete `DATABASE_URL`, `CORS_ORIGIN` (la dirección pública del servicio), `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`. `JWT_ACCESS_SECRET` se genera solo.
+3. **Datos iniciales.** Desde un equipo con el proyecto, copie `backend/.env.produccion.example` como `backend/.env.produccion`, complételo y ejecute:
+
+   ```bash
+   npm run prod:seed -w backend
+   npm run prod:fotos -w backend
+   ```
+
+   Para un ambiente de demostración, agregue `npm run prod:demo -w backend`. En un hotel real no se cargan datos de demostración.
+
+4. **Primer ingreso.** Entre con `admin@hotelrosita.co` y cambie las contraseñas iniciales desde _Usuarios_.
+
 ## Limitaciones conocidas
 
 - Dos reservas creadas exactamente al mismo tiempo para la misma habitación no se bloquean a nivel de base de datos; con una sola recepción el riesgo es mínimo.

@@ -3,6 +3,7 @@ node_modules/
 .env.*
 !.env.example
 !.env.test.example
+!.env.produccion.example
 dist/
 coverage/
 *.log

@@ -1,0 +1,39 @@
+# Despliegue en Render como Blueprint: un solo servicio web que compila la
+# interfaz, aplica las migraciones y sirve la web y la API desde la misma dirección.
+services:
+  - type: web
+    name: erp-hotel-rosita
+    runtime: node
+    plan: free
+    region: virginia
+    branch: main
+    autoDeploy: true
+    buildCommand: >-
+      npm ci --include=dev &&
+      npm run db:generate -w backend &&
+      npm run db:deploy -w backend &&
+      npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: '24'
+      - key: NODE_ENV
+        value: production
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: REFRESH_TOKEN_TTL_HOURS
+        value: '8'
+      - key: SUPABASE_BUCKET
+        value: Habitaciones
+      # Secretos: se escriben en el panel de Render y nunca quedan en el repositorio.
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

@@ -75,6 +75,13 @@ async function sembrarUsuarios() {
   if (!password) {
     throw new Error('Falta SEED_PASSWORD en el archivo .env');
   }
+  // En producción los usuarios iniciales no pueden quedar con una clave débil o de ejemplo.
+  const claveDebil = password.length < 12 || password === 'Rosita2026*';
+  if (process.env.NODE_ENV === 'production' && claveDebil) {
+    throw new Error(
+      'En producción SEED_PASSWORD debe tener al menos 12 caracteres y no ser la de ejemplo',
+    );
+  }
   const passwordHash = await bcrypt.hash(password, 10);
 
   const usuarios = [
