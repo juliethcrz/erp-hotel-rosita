@@ -1,0 +1,26 @@
+.barra {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .barra {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--degradado-marca);
+    color: var(--verde-100);
+    box-shadow: 0 8px 24px -12px rgb(5 31 32 / 0.5);
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-2);
+    color: var(--blanco);
+    font-weight: 600;
+  }
+}

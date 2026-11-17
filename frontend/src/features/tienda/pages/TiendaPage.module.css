@@ -1,0 +1,12 @@
+.distribucion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--espacio-5);
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .distribucion {
+    grid-template-columns: 1fr;
+  }
+}

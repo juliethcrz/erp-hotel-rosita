@@ -1,0 +1,5 @@
+.cerrada {
+  margin-bottom: var(--espacio-4);
+  color: var(--texto-suave);
+  font-size: var(--texto-sm);
+}

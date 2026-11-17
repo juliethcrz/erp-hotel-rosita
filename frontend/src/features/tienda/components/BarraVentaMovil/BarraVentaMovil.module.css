@@ -1,0 +1,40 @@
+.barra {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .barra {
+    position: fixed;
+    right: var(--espacio-4);
+    bottom: var(--espacio-4);
+    left: var(--espacio-4);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-3);
+    padding: 14px 20px;
+    border: none;
+    border-radius: var(--radio-pildora);
+    background: var(--degradado-primario);
+    box-shadow: var(--sombra-elevada);
+    color: var(--blanco);
+    font: inherit;
+    cursor: pointer;
+    animation: aparecer 240ms ease both;
+  }
+
+  .cantidad {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-2);
+    color: var(--verde-100);
+    font-size: var(--texto-sm);
+  }
+}
+
+@media (max-width: 720px) {
+  .barra {
+    bottom: calc(var(--alto-navegacion-movil) + 24px);
+  }
+}

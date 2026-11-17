@@ -1,0 +1,33 @@
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+}
+
+.fila dt {
+  color: var(--texto-suave);
+}
+
+.fila dd {
+  margin: 0;
+  font-weight: 500;
+  text-align: right;
+}
+
+.total {
+  padding-top: 10px;
+  border-top: 1px dashed var(--borde-fuerte);
+}
+
+.total dd {
+  color: var(--verde-800);
+  font-size: var(--texto-lg);
+  font-weight: 600;
+}

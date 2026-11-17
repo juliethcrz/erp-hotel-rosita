@@ -1,0 +1,9 @@
+.entrada {
+  color: var(--exito);
+  font-weight: 500;
+}
+
+.salida {
+  color: var(--peligro);
+  font-weight: 500;
+}

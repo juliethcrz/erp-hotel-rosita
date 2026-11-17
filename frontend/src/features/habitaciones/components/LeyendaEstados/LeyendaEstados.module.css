@@ -1,0 +1,68 @@
+.leyenda {
+  display: flex;
+  gap: var(--espacio-2);
+  margin-bottom: var(--espacio-5);
+  padding-bottom: 4px;
+  overflow-x: auto;
+}
+
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: 8px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora);
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+  color: var(--texto-suave);
+  font-size: var(--texto-sm);
+  cursor: pointer;
+  transition:
+    background var(--transicion),
+    color var(--transicion);
+}
+
+.activo {
+  border-color: transparent;
+  background: var(--degradado-primario);
+  color: var(--blanco);
+}
+
+.punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.DISPONIBLE {
+  background: var(--estado-disponible);
+}
+
+.RESERVADA {
+  background: var(--estado-reservada);
+}
+
+.OCUPADA {
+  background: var(--estado-ocupada);
+}
+
+.EN_LIMPIEZA {
+  background: var(--estado-limpieza);
+}
+
+.EN_MANTENIMIENTO {
+  background: var(--estado-mantenimiento);
+}
+
+.cantidad {
+  padding: 0 7px;
+  border-radius: var(--radio-pildora);
+  background: rgb(11 43 38 / 0.06);
+  font-size: var(--texto-xs);
+}
+
+.activo .cantidad {
+  background: rgb(255 255 255 / 0.18);
+}

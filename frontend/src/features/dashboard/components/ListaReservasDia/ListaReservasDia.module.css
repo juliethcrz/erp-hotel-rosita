@@ -1,0 +1,77 @@
+.contador {
+  display: inline-grid;
+  min-width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  padding: 0 8px;
+  place-items: center;
+  border-radius: var(--radio-pildora);
+  background: var(--verde-50);
+  color: var(--verde-700);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+}
+
+.vacio {
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+  border-radius: var(--radio);
+  color: var(--texto);
+  text-decoration: none;
+  transition: var(--transicion);
+}
+
+.fila:hover {
+  background: var(--superficie-suave);
+}
+
+.fila svg {
+  color: var(--texto-tenue);
+}
+
+.habitaciones {
+  display: grid;
+  min-width: 52px;
+  height: 44px;
+  padding: 0 8px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--degradado-primario);
+  color: var(--blanco);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+}
+
+.datos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.datos strong {
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.datos small {
+  color: var(--texto-tenue);
+}

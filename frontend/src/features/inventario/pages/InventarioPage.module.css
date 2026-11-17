@@ -1,0 +1,7 @@
+.pestanas {
+  overflow-x: auto;
+}
+
+.alternar {
+  margin-top: var(--espacio-3);
+}

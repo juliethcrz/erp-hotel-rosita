@@ -1,0 +1,18 @@
+import { z } from 'zod';
+import { METODOS_PAGO } from './constantes.js';
+
+const idSchema = z.coerce.number().int().positive();
+
+export const idParamSchema = z.object({ id: idSchema });
+
+export const fotoParamsSchema = idParamSchema.extend({ fotoId: idSchema });
+
+export const fechaSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'La fecha debe tener el formato AAAA-MM-DD')
+  .transform((valor) => new Date(`${valor}T00:00:00Z`));
+
+export const pagoSchema = z.object({
+  metodo: z.enum(METODOS_PAGO),
+  monto: z.number().int().positive(),
+});

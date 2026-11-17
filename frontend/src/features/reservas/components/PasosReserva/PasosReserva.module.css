@@ -1,0 +1,68 @@
+.pasos {
+  display: flex;
+  gap: var(--espacio-2);
+  margin: 0 0 var(--espacio-5);
+  padding: 0;
+  list-style: none;
+}
+
+.paso {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-3);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+  color: var(--texto-tenue);
+  font-size: var(--texto-sm);
+  transition: var(--transicion);
+}
+
+.marca {
+  display: grid;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--verde-50);
+  color: var(--verde-700);
+  font-weight: 600;
+}
+
+.actual {
+  background: var(--degradado-marca);
+  color: #fff;
+  box-shadow: var(--sombra);
+}
+
+.actual .marca {
+  background: rgb(255 255 255 / 0.16);
+  color: #fff;
+}
+
+.hecho {
+  color: var(--texto);
+}
+
+.hecho .marca {
+  background: var(--verde-400);
+  color: var(--verde-950);
+}
+
+@media (max-width: 720px) {
+  .paso {
+    justify-content: center;
+    padding: var(--espacio-2);
+  }
+
+  .nombre {
+    display: none;
+  }
+
+  .actual .nombre {
+    display: inline;
+  }
+}

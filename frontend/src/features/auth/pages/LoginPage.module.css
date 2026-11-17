@@ -1,0 +1,127 @@
+.pantalla {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.marca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  overflow: hidden;
+  background: var(--degradado-marca);
+  color: var(--verde-100);
+}
+
+.marca::after {
+  content: '';
+  position: absolute;
+  right: -160px;
+  bottom: -160px;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(142 182 155 / 0.35), transparent 70%);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  color: var(--blanco);
+  font-size: var(--texto-lg);
+  font-weight: 600;
+}
+
+.mensaje {
+  position: relative;
+  z-index: 1;
+  max-width: 440px;
+}
+
+.mensaje h1 {
+  margin-bottom: var(--espacio-5);
+  color: var(--blanco);
+  font-size: 2.3rem;
+  line-height: 1.15;
+}
+
+.mensaje ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mensaje li {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  color: var(--verde-200);
+}
+
+.marca small {
+  color: var(--verde-300);
+}
+
+.panel {
+  display: grid;
+  place-items: center;
+  padding: var(--espacio-5);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  width: min(400px, 100%);
+  padding: 40px;
+  border: 1px solid var(--borde);
+  border-radius: 28px;
+  background: var(--superficie-vidrio);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--sombra-elevada);
+  animation: aparecer 420ms ease both;
+}
+
+.formulario h2 {
+  font-size: 1.5rem;
+}
+
+.formulario p {
+  margin-top: 4px;
+  color: var(--texto-suave);
+  font-size: var(--texto-sm);
+}
+
+@media (max-width: 900px) {
+  .pantalla {
+    grid-template-columns: 1fr;
+  }
+
+  .marca {
+    padding: 28px 24px 56px;
+  }
+
+  .mensaje h1 {
+    font-size: 1.6rem;
+  }
+
+  .mensaje ul,
+  .marca small {
+    display: none;
+  }
+
+  .panel {
+    margin-top: -40px;
+    place-items: start center;
+  }
+
+  .formulario {
+    padding: 28px 24px;
+  }
+}

@@ -1,0 +1,20 @@
+.tarjeta {
+  padding: var(--espacio-5);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  animation: aparecer 320ms ease both;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+}
+
+.encabezado h2 {
+  font-size: var(--texto-base);
+}

@@ -1,0 +1,39 @@
+.pestanas {
+  display: inline-flex;
+  max-width: 100%;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: var(--espacio-4);
+  padding: 4px;
+  border-radius: var(--radio-pildora);
+  background: var(--verde-100);
+}
+
+.ancho {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  width: 100%;
+}
+
+.opcion {
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radio-pildora);
+  background: none;
+  color: var(--verde-800);
+  font-size: var(--texto-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background var(--transicion),
+    box-shadow var(--transicion);
+}
+
+.activa {
+  background: var(--superficie);
+  box-shadow: var(--sombra-sm);
+  font-weight: 600;
+}

@@ -1,0 +1,13 @@
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-2);
+}
+
+@media (max-width: 720px) {
+  .pie > * {
+    flex: 1;
+  }
+}

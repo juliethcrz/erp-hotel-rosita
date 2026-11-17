@@ -1,0 +1,47 @@
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.etiqueta {
+  color: var(--texto-suave);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.campo :is(input, select, textarea) {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+  color: var(--texto);
+  transition:
+    border-color var(--transicion),
+    box-shadow var(--transicion);
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+.campo :is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--verde-400);
+  box-shadow: var(--anillo-foco);
+}
+
+.ayuda {
+  color: var(--texto-tenue);
+  font-size: var(--texto-xs);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--espacio-4);
+}
