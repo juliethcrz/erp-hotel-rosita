@@ -1,12 +1,7 @@
 import { z } from 'zod';
-import { fechaSchema } from '../../shared/schemas.js';
+import { fechaSchema, pagoSchema } from '../../shared/schemas.js';
 
 const id = z.number().int().positive();
-
-const pagoSchema = z.object({
-  metodo: z.enum(['EFECTIVO', 'NEQUI', 'DAVIPLATA', 'BANCOLOMBIA', 'TRANSFERENCIA']),
-  monto: z.number().int().positive(),
-});
 
 export const cobroSchema = z.object({
   pagos: z.array(pagoSchema).default([]),

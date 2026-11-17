@@ -262,7 +262,8 @@ async function main() {
     codigos.add(codigo);
     return codigo;
   };
-  const yaSalieronHoy = minutoActual > 12 * 60;
+  // Desde las 8 a. m. ya hay huéspedes que entregaron la habitación.
+  const yaSalieronHoy = minutoActual > 8 * 60;
 
   const estadias = [];
   for (const habitacion of habitaciones) {
@@ -309,7 +310,7 @@ async function main() {
           ['NO_SHOW', 4],
         ]);
       } else if (salida === hoy) {
-        estado = yaSalieronHoy && probable(0.75) ? 'FINALIZADA' : 'EN_CURSO';
+        estado = yaSalieronHoy && probable(0.6) ? 'FINALIZADA' : 'EN_CURSO';
       } else if (enCursoHoy) {
         estado = 'EN_CURSO';
       } else if (llegada === hoy) {
@@ -333,7 +334,8 @@ async function main() {
             ]);
       let reservadaEl = sumarDias(llegada, -anticipacion);
       if (reservadaEl < INICIO) reservadaEl = INICIO;
-      if (reservadaEl > hoy) reservadaEl = hoy;
+      // Las reservas futuras se tomaron en los últimos días, no todas hoy.
+      if (reservadaEl > hoy) reservadaEl = sumarDias(hoy, -entero(0, 10));
       if (reservadaEl === hoy && minutoActual < 8 * 60 + 30) reservadaEl = sumarDias(hoy, -1);
 
       const tarifas = [];
@@ -392,13 +394,13 @@ async function main() {
       }
     }
     if (estado === 'FINALIZADA') {
-      agendar(momento(salida, 9 * 60 + 30, 11 * 60 + 45), (t) => hacerCheckout(estadia, t));
+      agendar(momento(salida, 7 * 60 + 15, 11 * 60 + 45), (t) => hacerCheckout(estadia, t));
     }
     if (estado === 'CANCELADA' && estadia.anticipo) {
       const diasAntes = Math.max(1, entero(1, 6));
       let dia = sumarDias(llegada, -diasAntes);
       if (dia < estadia.reservadaEl) dia = estadia.reservadaEl;
-      if (dia > hoy) dia = hoy;
+      if (dia > hoy) dia = sumarDias(hoy, -entero(0, 6));
       const devolver = diasAntes >= 2 && dia > estadia.reservadaEl && probable(0.6);
       if (devolver) agendar(momento(dia, 9 * 60, 18 * 60), (t) => cancelar(estadia, t));
     }

@@ -1,8 +1,8 @@
 import { prisma } from '../../config/database.js';
+import { METODOS_PAGO } from '../../shared/constantes.js';
 import { resumir } from '../caja/caja.service.js';
 import { diaEnColombia, diasDelPeriodo, fechaDeColumna, instantesDelPeriodo } from './periodo.js';
 
-const METODOS = ['EFECTIVO', 'NEQUI', 'DAVIPLATA', 'BANCOLOMBIA', 'TRANSFERENCIA'];
 const LINEA_DE_NEGOCIO = {
   ANTICIPO: 'ALOJAMIENTO',
   SALDO_CHECKIN: 'ALOJAMIENTO',
@@ -31,7 +31,7 @@ export async function ingresos({ desde, hasta }) {
 
   const porDia = ceros(diasDelPeriodo(desde, hasta));
   const porLinea = ceros(['ALOJAMIENTO', 'TIENDA']);
-  const porMetodo = ceros(METODOS);
+  const porMetodo = ceros(METODOS_PAGO);
   const totales = { total: 0, subtotal: 0, iva: 0, descuentos: 0, ventas: ventas.length };
 
   for (const venta of ventas) {
@@ -171,14 +171,14 @@ export async function caja({ desde, hasta }) {
   });
 
   const totales = { cajas: cajas.length, ingresos: 0, egresos: 0, neto: 0 };
-  const porMetodo = ceros(METODOS);
+  const porMetodo = ceros(METODOS_PAGO);
 
   const detalle = cajas.map(({ movimientos, ...datos }) => {
     const resumen = resumir({ ...datos, movimientos });
     totales.ingresos += resumen.ingresos;
     totales.egresos += resumen.egresos;
     totales.neto += resumen.neto;
-    for (const metodo of METODOS) porMetodo[metodo] += resumen.porMetodo[metodo];
+    for (const metodo of METODOS_PAGO) porMetodo[metodo] += resumen.porMetodo[metodo];
 
     return {
       id: datos.id,

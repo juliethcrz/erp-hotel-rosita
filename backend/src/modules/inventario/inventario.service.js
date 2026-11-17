@@ -23,18 +23,23 @@ export async function descontarStock(
   { productoId, cantidad, motivo, usuarioId, consumoId = null, ventaId = null, observacion = null },
 ) {
   const producto = await tx.producto.findUnique({ where: { id: productoId } });
-
   if (!producto?.activo) {
     throw new AppError('El producto no existe o está inactivo', 404);
   }
-  if (producto.stockActual < cantidad) {
-    throw new AppError(`Solo quedan ${producto.stockActual} unidades de ${producto.nombre}`, 409);
-  }
 
-  const actualizado = await tx.producto.update({
-    where: { id: productoId },
+  // La condición va en el mismo UPDATE: si otra venta se llevó las unidades
+  // entre la consulta y el descuento, no se actualiza nada y el stock no queda negativo.
+  const { count } = await tx.producto.updateMany({
+    where: { id: productoId, stockActual: { gte: cantidad } },
     data: { stockActual: { decrement: cantidad } },
   });
+  const actualizado = await tx.producto.findUnique({ where: { id: productoId } });
+  if (count === 0) {
+    throw new AppError(
+      `Solo quedan ${actualizado.stockActual} unidades de ${producto.nombre}`,
+      409,
+    );
+  }
 
   await tx.movimientoInventario.create({
     data: {

@@ -1,8 +1,8 @@
 import { prisma } from '../../config/database.js';
+import { METODOS_PAGO } from '../../shared/constantes.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import { obtenerConfiguracion } from '../../shared/utils/configuracion.js';
 
-const METODOS = ['EFECTIVO', 'NEQUI', 'DAVIPLATA', 'BANCOLOMBIA', 'TRANSFERENCIA'];
 const IVA = 0.19;
 
 export async function obtenerCajaAbierta(tx = prisma) {
@@ -14,7 +14,7 @@ export async function obtenerCajaAbierta(tx = prisma) {
 }
 
 export function resumir(caja) {
-  const porMetodo = Object.fromEntries(METODOS.map((metodo) => [metodo, 0]));
+  const porMetodo = Object.fromEntries(METODOS_PAGO.map((metodo) => [metodo, 0]));
   let ingresos = 0;
   let egresos = 0;
 

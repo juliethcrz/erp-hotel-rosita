@@ -1,16 +1,11 @@
+import { NOMBRES_METODO_PAGO } from '../../shared/constantes.js';
+
 /**
  * Convierte cada reporte en un documento neutro (título, cifras y tablas) que
  * los exportadores de PDF y Excel saben dibujar. Así el formato del archivo no
  * depende de cómo se calcula cada reporte.
  */
 
-const METODOS = {
-  EFECTIVO: 'Efectivo',
-  NEQUI: 'Nequi',
-  DAVIPLATA: 'Daviplata',
-  BANCOLOMBIA: 'Bancolombia',
-  TRANSFERENCIA: 'Transferencia',
-};
 const CONCEPTOS = {
   ANTICIPO: 'Anticipo',
   SALDO_CHECKIN: 'Saldo en el check-in',
@@ -22,7 +17,7 @@ const filasPorMetodo = (porMetodo, total) =>
   Object.entries(porMetodo)
     .filter(([, valor]) => valor !== 0)
     .map(([metodo, valor]) => ({
-      metodo: METODOS[metodo],
+      metodo: NOMBRES_METODO_PAGO[metodo],
       valor,
       participacion: total ? valor / total : 0,
     }));
@@ -90,7 +85,7 @@ function documentoIngresos(reporte) {
             ? `${CONCEPTOS[venta.tipo]} · ${venta.reserva}`
             : CONCEPTOS[venta.tipo],
           cliente: venta.cliente ?? 'No aplica',
-          metodos: venta.metodos.map((metodo) => METODOS[metodo]).join(' + '),
+          metodos: venta.metodos.map((metodo) => NOMBRES_METODO_PAGO[metodo]).join(' + '),
           total: venta.total,
         })),
       },
